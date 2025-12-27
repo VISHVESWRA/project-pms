@@ -13,6 +13,8 @@ import DashboardLayout from "../layouts/DashboardLayouts.jsx";
 import ChitAct from "../features/sidebar/list/chit/ChitAct.jsx";
 import ChitServices from "../features/sidebar/list/chit/ChitServices.jsx";
 import PersonalLoan from "../features/sidebar/list/loans/PersonalLoan.jsx";
+import IncomeForm from "../features/income/IncomeForm.jsx";
+import IncomeList from "../features/income/IncomeList.jsx";
 
 function AppRoutes() {
   return (
@@ -34,6 +36,9 @@ function AppRoutes() {
         <Route path="chit-act" element={<ChitAct />} />
         <Route path="chit-services" element={<ChitServices />} />
         <Route path="personal-loan" element={<PersonalLoan />} />
+        <Route path="income/form" element={<IncomeForm />} />
+        <Route path="income/form/edit/:id" element={<IncomeForm />} />
+        <Route path="income/list" element={<IncomeList />} />
       </Route>
     </Routes>
   );

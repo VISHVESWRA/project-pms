@@ -1,34 +1,30 @@
-import { Outlet } from "react-router-dom";
 import { useState } from "react";
+import { Outlet } from "react-router-dom";
 import Sidebar from "../features/sidebar/Sidebar";
-import { Menu } from "lucide-react";
-import { Navigate } from "react-router-dom";
+import Header from "../features/sidebar/Header";
 
 function DashboardLayout() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
-
-  if (!isLoggedIn) {
-    return <Navigate to="/" />;
-  }
+  const [sidebarOpen, setSidebarOpen] = useState(
+    window.innerWidth >= 768 // open by default on desktop
+  );
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
       {/* Main content */}
-      <div className="flex-1">
-        {/* Mobile header */}
-        <div className="md:hidden flex items-center gap-3 bg-white shadow px-4 py-3">
-          <button onClick={() => setSidebarOpen(true)}>
-            <Menu />
-          </button>
-          <h1 className="font-semibold">Dashboard</h1>
-        </div>
+      <div className="flex flex-col flex-1 min-h-0 overflow-auto">
+        <Header setSidebarOpen={setSidebarOpen} />
 
-        <main className="p-4">
+        {/* <main className="flex-1 min-h-0 overflow-y-auto bg-gray-100 p-4">
           <Outlet />
+        </main> */}
+
+        <main className="flex-1 overflow-auto bg-gray-200 p-4">
+          <div className="max-w-screen mx-auto space-y-8">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>
