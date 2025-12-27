@@ -21,11 +21,6 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         : "text-gray-300 hover:bg-gray-700 hover:text-white"
     }`;
 
-  const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    navigate("/");
-  };
-
   return (
     <>
       {/* Overlay (mobile) */}
@@ -80,7 +75,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           </NavLink>
 
           <NavLink
-            to="/dashboard/policies"
+            to="/dashboard/policies/list"
             className={linkClass}
             onClick={() => setSidebarOpen(false)}
           >
@@ -88,7 +83,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           </NavLink>
 
           <NavLink
-            to="/dashboard/loans"
+            to="/dashboard/loans/list"
             className={linkClass}
             onClick={() => setSidebarOpen(false)}
           >
@@ -96,7 +91,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           </NavLink>
 
           <NavLink
-            to="/dashboard/chit"
+            to="/dashboard/chits/list"
             className={linkClass}
             onClick={() => setSidebarOpen(false)}
           >

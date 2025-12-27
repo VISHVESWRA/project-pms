@@ -17,6 +17,12 @@ import IncomeForm from "../features/income/IncomeForm.jsx";
 import IncomeList from "../features/income/IncomeList.jsx";
 import ExpensesList from "../features/expenses/ExpensesList.jsx";
 import ExpensesForm from "../features/expenses/ExpensesForm.jsx";
+import PoliciesList from "../features/policies/PoliciesList.jsx";
+import PolicyForm from "../features/policies/PoliciesForm.jsx";
+import LoanForm from "../features/loans/LoansForm.jsx";
+import LoanList from "../features/loans/LoansList.jsx";
+import ChitList from "../features/chits/ChitsList.jsx";
+import ChitForm from "../features/chits/ChitsForm.jsx";
 
 function AppRoutes() {
   return (
@@ -39,12 +45,24 @@ function AppRoutes() {
         <Route path="chit-services" element={<ChitServices />} />
         <Route path="personal-loan" element={<PersonalLoan />} />
         <Route path="income/form" element={<IncomeForm />} />
-        <Route path="income/form/edit/:id" element={<IncomeForm />} />
+        <Route path="income/form/:id" element={<IncomeForm />} />
         <Route path="income/list" element={<IncomeList />} />
 
         <Route path="expenses/form" element={<ExpensesForm />} />
-        <Route path="expenses/form/edit/:id" element={<ExpensesForm />} />
+        <Route path="expenses/form/:id" element={<ExpensesForm />} />
         <Route path="expenses/list" element={<ExpensesList />} />
+
+        <Route path="policies/form" element={<PolicyForm />} />
+        <Route path="policies/form/:id" element={<PolicyForm />} />
+        <Route path="policies/list" element={<PoliciesList />} />
+
+        <Route path="loans/form" element={<LoanForm />} />
+        <Route path="loans/form/:id" element={<LoanForm />} />
+        <Route path="loans/list" element={<LoanList />} />
+
+        <Route path="chits/form" element={<ChitForm />} />
+        <Route path="chits/form/:id" element={<ChitForm />} />
+        <Route path="chits/list" element={<ChitList />} />
       </Route>
     </Routes>
   );

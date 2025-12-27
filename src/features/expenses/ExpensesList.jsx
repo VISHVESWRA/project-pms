@@ -128,7 +128,6 @@ export default function ExpensesList() {
           rows={5}
           scrollable
           scrollHeight="calc(100vh - 260px)"
-          responsiveLayout="scroll"
           filters={filters}
           globalFilterFields={[
             "expenseName",
