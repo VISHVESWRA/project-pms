@@ -15,6 +15,8 @@ import ChitServices from "../features/sidebar/list/chit/ChitServices.jsx";
 import PersonalLoan from "../features/sidebar/list/loans/PersonalLoan.jsx";
 import IncomeForm from "../features/income/IncomeForm.jsx";
 import IncomeList from "../features/income/IncomeList.jsx";
+import ExpensesList from "../features/expenses/ExpensesList.jsx";
+import ExpensesForm from "../features/expenses/ExpensesForm.jsx";
 
 function AppRoutes() {
   return (
@@ -39,6 +41,10 @@ function AppRoutes() {
         <Route path="income/form" element={<IncomeForm />} />
         <Route path="income/form/edit/:id" element={<IncomeForm />} />
         <Route path="income/list" element={<IncomeList />} />
+
+        <Route path="expenses/form" element={<ExpensesForm />} />
+        <Route path="expenses/form/edit/:id" element={<ExpensesForm />} />
+        <Route path="expenses/list" element={<ExpensesList />} />
       </Route>
     </Routes>
   );

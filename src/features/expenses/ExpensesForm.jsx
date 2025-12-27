@@ -3,9 +3,10 @@ import { TextField, MenuItem, Button, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BreadcrumbNav from "../../components/BreadCrumbs";
 
-export default function IncomeForm() {
+export default function ExpenseForm() {
+  const navigate = useNavigate();
+
   const { register, handleSubmit, control } = useForm();
-  const navigator = useNavigate();
 
   const setBreadcrumb = [
     {
@@ -14,15 +15,16 @@ export default function IncomeForm() {
     },
     {
       label: "List",
-      href: "../income/list",
+      href: "../expenses/list",
     },
     {
-      label: "Income Form",
+      label: "Expense Form",
     },
   ];
 
   const onSubmit = (data) => {
-    console.log(data);
+    console.log("Expense Data:", data);
+    navigate("../expenses/list");
   };
 
   return (
@@ -31,9 +33,9 @@ export default function IncomeForm() {
       <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-sm border">
         {/* Header */}
         <div className="px-6 py-4">
-          <h2 className="text-lg font-semibold text-gray-800">Add Income</h2>
+          <h2 className="text-lg font-semibold text-gray-800">Add Expense</h2>
           <p className="text-sm text-gray-500">
-            Track your income sources accurately
+            Track your expenses accurately
           </p>
         </div>
 
@@ -44,20 +46,20 @@ export default function IncomeForm() {
           onSubmit={handleSubmit(onSubmit)}
           className="p-6 grid grid-cols-1 md:grid-cols-12 gap-5"
         >
-          {/* Income Source */}
+          {/* Expense Name */}
           <TextField
-            label="Income Source"
-            placeholder="Salary / Freelancing / Business"
+            label="Expense Name"
+            placeholder="Food / Rent / Electricity"
             size="small"
             fullWidth
             className="md:col-span-6"
-            {...register("sourceName", { required: true })}
+            {...register("expenseName", { required: true })}
           />
 
-          {/* Category (TEXT) */}
+          {/* Category */}
           <TextField
             label="Category"
-            placeholder="Job, Online, Investment"
+            placeholder="Utilities, Travel, Groceries"
             size="small"
             fullWidth
             className="md:col-span-6"
@@ -72,27 +74,6 @@ export default function IncomeForm() {
             fullWidth
             className="md:col-span-4"
             {...register("amount", { required: true })}
-          />
-
-          {/* Frequency */}
-          <Controller
-            name="frequency"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <TextField
-                {...field}
-                select
-                label="Frequency"
-                size="small"
-                fullWidth
-                className="md:col-span-4"
-              >
-                <MenuItem value="one-time">One Time</MenuItem>
-                <MenuItem value="monthly">Monthly</MenuItem>
-                <MenuItem value="yearly">Yearly</MenuItem>
-              </TextField>
-            )}
           />
 
           {/* Payment Mode */}
@@ -111,12 +92,13 @@ export default function IncomeForm() {
               >
                 <MenuItem value="cash">Cash</MenuItem>
                 <MenuItem value="upi">UPI</MenuItem>
-                <MenuItem value="bank">Bank Transfer</MenuItem>
+                <MenuItem value="bank">Bank</MenuItem>
+                <MenuItem value="card">Card</MenuItem>
               </TextField>
             )}
           />
 
-          {/* Income Type */}
+          {/* Expense Type */}
           <Controller
             name="type"
             control={control}
@@ -125,20 +107,21 @@ export default function IncomeForm() {
               <TextField
                 {...field}
                 select
-                label="Income Type"
+                label="Expense Type"
                 size="small"
                 fullWidth
-                className="md:col-span-6"
+                className="md:col-span-4"
               >
-                <MenuItem value="active">Active</MenuItem>
-                <MenuItem value="passive">Passive</MenuItem>
+                <MenuItem value="essential">Essential</MenuItem>
+                <MenuItem value="non-essential">Non Essential</MenuItem>
+                <MenuItem value="recurring">Recurring</MenuItem>
               </TextField>
             )}
           />
 
           {/* Date */}
           <TextField
-            label="Date Received"
+            label="Expense Date"
             type="date"
             size="small"
             fullWidth
@@ -162,7 +145,7 @@ export default function IncomeForm() {
           <div className="md:col-span-12 flex justify-end gap-3 pt-4">
             <Button
               variant="outlined"
-              onClick={() => navigator("../income/list")}
+              onClick={() => navigate("../expenses/list")}
             >
               Cancel
             </Button>

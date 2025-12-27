@@ -72,7 +72,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           </NavLink>
 
           <NavLink
-            to="/dashboard/expenses"
+            to="/dashboard/expenses/list"
             className={linkClass}
             onClick={() => setSidebarOpen(false)}
           >
@@ -119,16 +119,6 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             <Settings size={18} /> Settings
           </NavLink>
         </nav>
-
-        {/* Logout */}
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-3 px-4 py-2 mt-6 rounded-lg
-                   text-red-400 hover:bg-red-600 hover:text-white transition"
-        >
-          <LogOut size={18} />
-          Logout
-        </button>
       </aside>
     </>
   );
