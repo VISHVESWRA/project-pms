@@ -2,10 +2,14 @@ import { useForm, Controller } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { useSearchParams } from "react-router-dom";
 import toasts from "react-hot-toast";
+import api from "../../../app/axios";
 
-function ForgotPassword() {
+function ResetPassword() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
 
   const {
     control,
@@ -13,49 +17,53 @@ function ForgotPassword() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
+  const onSubmit = async (data) => {
+    try {
+      await api.post("/auth/reset-password", {
+        token,
+        password: data.password,
+      });
 
-    if (!storedUser || storedUser.email !== data.email) {
-      toasts.error("Email not registered");
-      return;
+      toasts.success("Password reset successful");
+      navigate("/");
+    } catch (error) {
+      toasts.error(error.response?.data?.message || "Reset failed");
     }
-
-    // Save email temporarily for reset step
-    localStorage.setItem("resetEmail", data.email);
-    navigate("/reset-password");
   };
+
+  if (!token) {
+    navigate("/");
+    return null;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-sm">
         <h2 className="text-2xl font-semibold text-center mb-2">
-          Forgot Password
+          Reset Password
         </h2>
-        <p className="text-sm text-gray-500 text-center mb-6">
-          Enter your registered email
-        </p>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <Controller
-            name="email"
+            name="password"
             control={control}
             defaultValue=""
             rules={{
-              required: "Email is required",
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: "Enter valid email",
+              required: "Password is required",
+              minLength: {
+                value: 6,
+                message: "Minimum 6 characters",
               },
             }}
             render={({ field }) => (
               <TextField
                 {...field}
-                label="Email"
+                label="New Password"
+                type="password"
                 fullWidth
                 margin="normal"
-                error={!!errors.email}
-                helperText={errors.email?.message}
+                error={!!errors.password}
+                helperText={errors.password?.message}
               />
             )}
           />
@@ -70,7 +78,7 @@ function ForgotPassword() {
               background: "linear-gradient(to right, #2563eb, #7c3aed)",
             }}
           >
-            Continue
+            Reset Password
           </Button>
 
           <p className="text-center text-sm mt-4">
@@ -85,4 +93,4 @@ function ForgotPassword() {
   );
 }
 
-export default ForgotPassword;
+export default ResetPassword;

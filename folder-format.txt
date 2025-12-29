@@ -1,0 +1,50 @@
+src/
+│
+├── app/                     # App-level setup
+│   ├── store.js             # Redux store
+│   └── axios.js             # Axios instance + interceptors
+│
+├── features/                # Feature-based architecture
+│   ├── auth/
+│   │   ├── pages/           # Screens
+│   │   │   ├── Login.jsx
+│   │   │   └── Register.jsx
+│   │   │
+│   │   ├── authSlice.js     # Redux slice (JWT, user)
+│   │   ├── authService.js   # API calls
+│   │   └── authTypes.js     # (optional) constants
+│   │
+│   ├── dashboard/
+│   │   ├── pages/
+│   │   │   └── Dashboard.jsx
+│   │   │
+│   │   ├── components/
+│   │   │   └── StatsCard.jsx
+│   │   │
+│   │   └── dashboardApi.js
+│
+├── components/              # Reusable UI components
+│   ├── Button.jsx
+│   ├── Modal.jsx
+│   ├── Loader.jsx
+│   └── ProtectedRoute.jsx
+│
+├── hooks/                   # Custom hooks
+│   └── useAuth.js
+│
+├── context/                 # Context (if not fully Redux)
+│   └── AuthContext.jsx
+│
+├── routes/                  # Routing
+│   └── AppRoutes.jsx
+│
+├── utils/                   # Helper functions
+│   ├── storage.js
+│   └── constants.js
+│
+├── styles/                  # Global styles
+│   └── globals.css
+│
+├── App.jsx
+├── main.jsx
+└── index.css

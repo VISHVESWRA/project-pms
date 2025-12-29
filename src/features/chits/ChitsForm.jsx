@@ -15,7 +15,7 @@ export default function ChitForm() {
 
   const breadcrumbs = [
     { label: "Home", href: "/" },
-    { label: "Chits", href: "/dashboard/chits" },
+    { label: "Chits", href: "../chits/list" },
     { label: "Add Chit" },
   ];
 

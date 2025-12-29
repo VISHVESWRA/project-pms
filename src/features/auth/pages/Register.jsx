@@ -8,33 +8,45 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import toasts from "react-hot-toast";
+import api from "../../../app/axios";
 
 function Register() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
   const {
     control,
     handleSubmit,
-    reset,
-    watch,
     formState: { errors },
   } = useForm();
   const password = useWatch({ control, name: "password" });
 
-  const onSubmit = (data) => {
-    const existingUser = JSON.parse(localStorage.getItem("user"));
+  // const onSubmit = (data) => {
+  //   const existingUser = JSON.parse(localStorage.getItem("user"));
 
-    if (existingUser?.email === data.email) {
-      toasts.error("User already exists. Please login.");
-      return;
+  //   if (existingUser?.email === data.email) {
+  //     toasts.error("User already exists. Please login.");
+  //     return;
+  //   }
+
+  //   localStorage.setItem("user", JSON.stringify(data));
+  //   toasts.success("Registration successful! Please login.");
+  //   reset();
+  //   navigate("/");
+  // };
+
+  const onSubmit = async (data) => {
+    try {
+      await api.post("/auth/register", {
+        email: data.email,
+        password: data.password,
+      });
+
+      toasts.success("Registration successful! Please login.");
+      navigate("/");
+    } catch (error) {
+      toasts.error(error.response?.data?.message || "Registration failed");
     }
-
-    localStorage.setItem("user", JSON.stringify(data));
-    toasts.success("Registration successful! Please login.");
-    reset();
-    navigate("/");
   };
 
   return (

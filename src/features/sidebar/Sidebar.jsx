@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
   Banknote,
@@ -12,8 +12,6 @@ import {
 } from "lucide-react";
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
-  const navigate = useNavigate();
-
   const linkClass = ({ isActive }) =>
     `flex items-center gap-3 px-4 py-2 rounded-lg transition ${
       isActive

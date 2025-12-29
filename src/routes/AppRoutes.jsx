@@ -1,9 +1,8 @@
-import { Routes, Route } from "react-router-dom";
-import Login from "../features/auth/Login.jsx";
-// import Dashboard from "../features/dashboard/Dashboard.jsx";
-import Register from "../features/auth/Register.jsx";
-import ForgotPassword from "../features/auth/ForgotPassword.jsx";
-import ResetPassword from "../features/auth/ResetPassword.jsx";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Login from "../features/auth/pages/Login.jsx";
+import Register from "../features/auth/pages/Register.jsx";
+import ForgotPassword from "../features/auth/pages/ForgotPassword.jsx";
+import ResetPassword from "../features/auth/pages/ResetPassword.jsx";
 import Loans from "../features/sidebar/list/loans/Loans.jsx";
 import Policies from "../features/sidebar/list/Policies.jsx";
 import Chit from "../features/sidebar/list/chit/Chit.jsx";
@@ -23,12 +22,20 @@ import LoanForm from "../features/loans/LoansForm.jsx";
 import LoanList from "../features/loans/LoansList.jsx";
 import ChitList from "../features/chits/ChitsList.jsx";
 import ChitForm from "../features/chits/ChitsForm.jsx";
+import ProtectedRoute from "./protectedRoute.jsx";
+import PublicRoute from "./PublicRoute.jsx";
 
 function AppRoutes() {
   return (
     <Routes>
       {/* AUTH ROUTES */}
-      <Route element={<AuthLayout />}>
+      <Route
+        element={
+          <PublicRoute>
+            <AuthLayout />
+          </PublicRoute>
+        }
+      >
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -36,8 +43,18 @@ function AppRoutes() {
       </Route>
 
       {/* DASHBOARD ROUTES */}
-      <Route path="/dashboard" element={<DashboardLayout />}>
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route path="*" element={<Navigate to="/" replace />} />
         <Route index element={<Home />} />
+        {/* <Route index element={<Navigate to="home" replace />} /> */}
+        <Route path="home" element={<Home />} />
         <Route path="loans" element={<Loans />} />
         <Route path="policies" element={<Policies />} />
         <Route path="chit" element={<Chit />} />

@@ -7,8 +7,8 @@ function Header({ setSidebarOpen }) {
   const [profileOpen, setProfileOpen] = useState(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    navigate("/");
+    localStorage.removeItem("token");
+    navigate("/", { replace: true });
   };
 
   return (

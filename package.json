@@ -14,6 +14,7 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.6",
     "@mui/material": "^7.3.6",
+    "axios": "^1.13.2",
     "bootstrap": "^5.3.8",
     "lucide-react": "^0.562.0",
     "primeicons": "^7.0.0",

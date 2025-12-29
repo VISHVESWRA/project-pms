@@ -13,6 +13,8 @@ import Link from "@mui/material/Link";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
+import api from "../../../app/axios";
+
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -21,52 +23,33 @@ function Login() {
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm({
     mode: "onChange",
   });
-
-  const onSubmit = (data) => {
-    setLoading(true);
-
-    setTimeout(() => {
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-
-      // 1️⃣ No user registered
-      if (!storedUser) {
-        toasts.error("User not found. Please register.");
-        setLoading(false);
-        return;
-      }
-
-      // 2️⃣ Email mismatch
-      if (data.email !== storedUser.email) {
-        toasts.error("User not found. Please register.");
-        setLoading(false);
-        return;
-      }
-
-      // 3️⃣ Password mismatch
-      if (data.password !== storedUser.password) {
-        toasts.error("Invalid password.");
-        setLoading(false);
-        return;
-      }
-
-      // 4️⃣ Success
-      localStorage.setItem("isLoggedIn", "true");
-      toasts.success("Login successful!");
-      navigate("/dashboard");
-
-      setLoading(false);
-    }, 1500);
-  };
 
   useEffect(() => {
     if (localStorage.getItem("isLoggedIn") === "true") {
       navigate("/dashboard");
     }
   }, [navigate]);
+
+  const onSubmit = async (data) => {
+    setLoading(true);
+    try {
+      const res = await api.post("/auth/login", data);
+
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      toasts.success("Login successful!");
+      navigate("/dashboard", { replace: true });
+    } catch (error) {
+      toasts.error(error.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
