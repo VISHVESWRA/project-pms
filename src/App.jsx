@@ -7,12 +7,10 @@ import { PrimeReactProvider } from "primereact/api";
 function App() {
   return (
     <>
-      <PrimeReactProvider>
-        <BrowserRouter>
-          <Toaster position="top-right" reverseOrder={true} />
-          <AppRoutes />
-        </BrowserRouter>
-      </PrimeReactProvider>
+      <BrowserRouter>
+        <Toaster position="top-right" reverseOrder={true} />
+        <AppRoutes />
+      </BrowserRouter>
     </>
   );
 }

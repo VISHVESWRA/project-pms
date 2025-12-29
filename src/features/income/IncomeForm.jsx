@@ -2,10 +2,22 @@ import { useForm, Controller } from "react-hook-form";
 import { TextField, MenuItem, Button, Divider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BreadcrumbNav from "../../components/BreadCrumbs";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { addIncome, resetIncomeState } from "./IncomeSlice";
 
 export default function IncomeForm() {
   const { register, handleSubmit, control } = useForm();
   const navigator = useNavigate();
+  const dispatch = useDispatch();
+  const { loading, success, error } = useSelector((state) => state.income);
+
+  useEffect(() => {
+    if (success) {
+      dispatch(resetIncomeState());
+      navigator("../income/list");
+    }
+  }, [success, dispatch, navigator]);
 
   const setBreadcrumb = [
     {
@@ -22,7 +34,7 @@ export default function IncomeForm() {
   ];
 
   const onSubmit = (data) => {
-    console.log(data);
+    dispatch(addIncome(data));
   };
 
   return (
@@ -166,9 +178,11 @@ export default function IncomeForm() {
             >
               Cancel
             </Button>
-            <Button variant="contained" type="submit">
-              Save
+            <Button variant="contained" type="submit" disabled={loading}>
+              {loading ? "Saving..." : "Save"}
             </Button>
+
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
           </div>
         </form>
       </div>
