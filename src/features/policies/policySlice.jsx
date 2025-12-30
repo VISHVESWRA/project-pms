@@ -28,7 +28,7 @@ export const deletePolicy = createAsyncThunk("policies/delete", async (id) => {
 
 const policySlice = createSlice({
   name: "policies",
-  initialState: { items: [], loading: false },
+  initialState: { items: [], loading: false, error: null },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPolicies.pending, (state) => {

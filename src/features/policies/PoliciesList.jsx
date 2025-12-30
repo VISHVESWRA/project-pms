@@ -1,6 +1,5 @@
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
@@ -10,30 +9,79 @@ import { FilterMatchMode } from "primereact/api";
 import TextField from "@mui/material/TextField";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePolicy, fetchPolicies } from "./policySlice";
+import { Button } from "react-bootstrap";
 
 export default function PoliciesList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { items: policies } = useSelector((state) => state.policies);
 
-  const [selectedPolicies, setSelectedPolicies] = useState(null);
-  const [globalFilter, setGlobalFilter] = useState("");
+  const [globalFilterValue, setGlobalFilterValue] = useState("");
+  const [selectedExpenses, setSelectedExpenses] = useState(null);
 
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    startDate: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+    policyType: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
+
+  const [monthFilter, setMonthFilter] = useState("");
+  const [policyTypeFilter, setPolicyTypeFilter] = useState("");
 
   useEffect(() => {
     dispatch(fetchPolicies());
   }, [dispatch]);
 
-  const handleSearch = (e) => setGlobalFilter(e.target.value);
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setGlobalFilterValue(value);
+    setFilters((prev) => ({
+      ...prev,
+      global: { value, matchMode: FilterMatchMode.CONTAINS },
+    }));
+  };
 
-  const amountTemplate = (row) => (
-    <span>₹ {row.premiumAmount.toLocaleString("en-IN")}</span>
-  );
+  useEffect(() => {
+    if (monthFilter) {
+      setFilters((prev) => ({
+        ...prev,
+        startDate: {
+          value: monthFilter,
+          matchMode: FilterMatchMode.STARTS_WITH,
+        },
+      }));
+    } else {
+      setFilters((prev) => ({
+        ...prev,
+        startDate: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+      }));
+    }
+  }, [monthFilter]);
+
+  useEffect(() => {
+    if (policyTypeFilter) {
+      setFilters((prev) => ({
+        ...prev,
+        policyType: {
+          value: policyTypeFilter,
+          matchMode: FilterMatchMode.CONTAINS,
+        },
+      }));
+    } else {
+      setFilters((prev) => ({
+        ...prev,
+        policyType: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      }));
+    }
+  }, [policyTypeFilter]);
 
   const setBreadcrumb = [{ label: "Home", href: "/" }, { label: "Policies" }];
+  const paginatorLeft = (
+    <Button type="button" icon="pi pi-refresh" severity="secondary" />
+  );
+  const paginatorRight = (
+    <Button type="button" icon="pi pi-download" severity="secondary" />
+  );
 
   const setSideNavButton = [
     {
@@ -42,18 +90,6 @@ export default function PoliciesList() {
       onClick: () => navigate("/dashboard/policies/form"),
     },
   ];
-
-  // const handleSearch = (e) => {
-  //   const value = e.target.value;
-  //   setGlobalFilterValue(value);
-  //   setFilters({
-  //     global: { value, matchMode: FilterMatchMode.CONTAINS },
-  //   });
-  // };
-
-  // const amountTemplate = (row) => (
-  //   <span className="font-semibold">₹ {row.premiumAmount}</span>
-  // );
 
   const actionTemplate = (row) => (
     <div className="flex gap-3">
@@ -75,54 +111,83 @@ export default function PoliciesList() {
     <>
       <BreadcrumbNav items={setBreadcrumb} sideNavButtons={setSideNavButton} />
 
-      <div className="flex justify-between items-center mb-3">
-        <span className="p-input-icon-left">
-          <TextField
-            id="outlined-search"
-            label="Search Income"
-            type="search"
-            size="small"
-            value={globalFilter}
-            onChange={handleSearch}
-            sx={{ width: 280 }}
-          />
-        </span>
+      <div className="flex flex-wrap gap-4 justify-between items-center mb-3">
+        {/* Search */}
+        <TextField
+          label="Search Policies"
+          size="small"
+          type="search"
+          value={globalFilterValue}
+          onChange={handleSearch}
+          sx={{ width: 280 }}
+        />
+
+        {/* Month */}
+        <TextField
+          label="Filter by Month"
+          size="small"
+          type="month"
+          value={monthFilter}
+          onChange={(e) => setMonthFilter(e.target.value)}
+        />
+
+        {/* Policy Type */}
+        <TextField
+          label="Filter by Policy Type"
+          size="small"
+          value={policyTypeFilter}
+          onChange={(e) => setPolicyTypeFilter(e.target.value)}
+        />
+
+        {/* Clear */}
+        <button
+          className="px-3 py-1 border rounded bg-gray-100 hover:bg-gray-200"
+          onClick={() => {
+            setGlobalFilterValue("");
+            setMonthFilter("");
+            setPolicyTypeFilter("");
+          }}
+        >
+          Clear Filters
+        </button>
       </div>
 
       <div className="card m-2">
         <DataTable
           value={policies}
           dataKey="_id"
-          selection={selectedPolicies}
-          onSelectionChange={(e) => setSelectedPolicies(e.value)}
+          selection={selectedExpenses}
+          onSelectionChange={(e) => setSelectedExpenses(e.value)}
           selectionMode="checkbox"
           paginator
           rows={5}
           rowsPerPageOptions={[5, 10, 25]}
-          showGridlines
-          rowHover
           scrollable
-          scrollHeight="400px"
+          scrollHeight="calc(100vh - 260px)"
+          paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+          currentPageReportTemplate="{first} to {last} of {totalRecords}"
+          paginatorLeft={paginatorLeft}
+          paginatorRight={paginatorRight}
+          filters={filters}
           globalFilterFields={[
             "policyName",
             "policyType",
             "provider",
             "policyNumber",
-            "status",
             "frequency",
+            "status",
           ]}
-          filters={{ global: { value: globalFilter, matchMode: "contains" } }}
-          className="my-table"
+          showGridlines
         >
-          <Column selectionMode="multiple" style={{ width: "3rem" }} />
+          <Column selectionMode="multiple" headerStyle={{ width: "3rem" }} />
           <Column field="policyName" header="Policy Name" />
           <Column field="policyType" header="Type" />
           <Column field="provider" header="Provider" />
           <Column field="policyNumber" header="Policy No" />
-          <Column body={amountTemplate} header="Premium" />
+          <Column field="premiumAmount" header="Premium" />
           <Column field="frequency" header="Frequency" />
           <Column field="status" header="Status" />
-          <Column body={actionTemplate} header="Actions" />
+          <Column header="Actions" body={actionTemplate} />
         </DataTable>
       </div>
     </>
