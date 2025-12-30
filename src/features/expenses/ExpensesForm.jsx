@@ -1,12 +1,20 @@
 import { useForm, Controller } from "react-hook-form";
 import { TextField, MenuItem, Button, Divider } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import BreadcrumbNav from "../../components/BreadCrumbs";
+import { useDispatch } from "react-redux";
+import { addExpense, updateExpense } from "./expenseSlice";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import api from "../../app/axios";
 
 export default function ExpenseForm() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { id } = useParams();
+  const [loading, setLoading] = useState(false);
 
-  const { register, handleSubmit, control } = useForm();
+  const { register, handleSubmit, control, reset } = useForm();
 
   const setBreadcrumb = [
     {
@@ -22,10 +30,32 @@ export default function ExpenseForm() {
     },
   ];
 
+  // If editing, fetch the expense data
+  useEffect(() => {
+    if (id) {
+      setLoading(true);
+      api
+        .get(`http://localhost:5000/api/expenses/${id}`)
+        .then((res) => {
+          reset(res.data);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    }
+  }, [id, reset]);
+
   const onSubmit = (data) => {
-    console.log("Expense Data:", data);
+    if (id) {
+      // Update existing expense
+      dispatch(updateExpense({ id, data }));
+    } else {
+      // Add new expense
+      dispatch(addExpense(data));
+    }
     navigate("../expenses/list");
   };
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <>
@@ -33,9 +63,14 @@ export default function ExpenseForm() {
       <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-sm border">
         {/* Header */}
         <div className="px-6 py-4">
-          <h2 className="text-lg font-semibold text-gray-800">Add Expense</h2>
+          <h2 className="text-lg font-semibold text-gray-800">
+            {" "}
+            {id ? "Edit Expense" : "Add Expense"}
+          </h2>
           <p className="text-sm text-gray-500">
-            Track your expenses accurately
+            {id
+              ? "Update your expense details"
+              : "Track your expenses accurately"}
           </p>
         </div>
 
@@ -150,7 +185,7 @@ export default function ExpenseForm() {
               Cancel
             </Button>
             <Button variant="contained" type="submit">
-              Save
+              {id ? "Update" : "Save"}
             </Button>
           </div>
         </form>
