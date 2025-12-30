@@ -61,6 +61,7 @@ function AppRoutes() {
         <Route path="chit-act" element={<ChitAct />} />
         <Route path="chit-services" element={<ChitServices />} />
         <Route path="personal-loan" element={<PersonalLoan />} />
+
         <Route path="income/form" element={<IncomeForm />} />
         <Route path="income/form/:id" element={<IncomeForm />} />
         <Route path="income/list" element={<IncomeList />} />

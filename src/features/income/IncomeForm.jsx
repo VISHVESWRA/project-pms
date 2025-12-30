@@ -1,16 +1,32 @@
 import { useForm, Controller } from "react-hook-form";
 import { TextField, MenuItem, Button, Divider } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import BreadcrumbNav from "../../components/BreadCrumbs";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { addIncome, resetIncomeState } from "./IncomeSlice";
+import { updateIncome } from "./IncomeService";
 
 export default function IncomeForm() {
-  const { register, handleSubmit, control } = useForm();
+  const { register, handleSubmit, control, reset } = useForm();
   const navigator = useNavigate();
   const dispatch = useDispatch();
+  const { id } = useParams();
+  const isEdit = Boolean(id);
   const { loading, success, error } = useSelector((state) => state.income);
+
+  const income = useSelector((state) =>
+    state.income.list.find((item) => item._id === id)
+  );
+
+  useEffect(() => {
+    if (isEdit && income) {
+      reset({
+        ...income,
+        date: income.date?.split("T")[0], // important for date input
+      });
+    }
+  }, [isEdit, income, reset]);
 
   useEffect(() => {
     if (success) {
@@ -33,8 +49,12 @@ export default function IncomeForm() {
     },
   ];
 
-  const onSubmit = (data) => {
-    dispatch(addIncome(data));
+  const onSubmit = (formData) => {
+    if (id) {
+      dispatch(updateIncome({ id: income._id, data: formData }));
+    } else {
+      dispatch(addIncome(formData));
+    }
   };
 
   return (
@@ -179,7 +199,9 @@ export default function IncomeForm() {
               Cancel
             </Button>
             <Button variant="contained" type="submit" disabled={loading}>
-              {loading ? "Saving..." : "Save"}
+              {/* {loading ? "Saving..." : "Save"} */}
+
+              {isEdit ? "Update" : "Save"}
             </Button>
 
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}

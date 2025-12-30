@@ -12,6 +12,11 @@ export const fetchIncomeList = async () => {
   return res.data;
 };
 
+export const updateIncome = async (id, data) => {
+  const response = await api.put(`/income/${id}`, data);
+  return response.data;
+};
+
 export const deleteIncome = async (id) => {
   await api.delete(`/income/${id}`);
   return id;

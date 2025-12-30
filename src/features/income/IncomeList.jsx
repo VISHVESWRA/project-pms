@@ -75,7 +75,7 @@ export default function IncomeList() {
       <FiEdit
         size={18}
         className="text-blue-500 cursor-pointer hover:text-blue-700"
-        onClick={() => navigate(`/income/edit/${rowData._id}`)}
+        onClick={() => navigate(`../income/form/${rowData._id}`)}
       />
       <FiTrash2
         size={18}

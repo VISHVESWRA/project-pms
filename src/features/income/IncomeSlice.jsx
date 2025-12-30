@@ -30,6 +30,20 @@ export const fetchIncomes = createAsyncThunk(
   }
 );
 
+// UPDATE
+export const updateIncome = createAsyncThunk(
+  "income/update",
+  async ({ id, data }, thunkAPI) => {
+    try {
+      return await incomeService.updateIncome(id, data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to update income"
+      );
+    }
+  }
+);
+
 // DELETE
 export const deleteIncome = createAsyncThunk(
   "income/delete",
@@ -84,6 +98,27 @@ const incomeSlice = createSlice({
         state.list = action.payload;
       })
       .addCase(fetchIncomes.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // UPDATE
+      .addCase(updateIncome.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateIncome.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+
+        const index = state.list.findIndex(
+          (item) => item._id === action.payload._id
+        );
+
+        if (index !== -1) {
+          state.list[index] = action.payload;
+        }
+      })
+      .addCase(updateIncome.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
