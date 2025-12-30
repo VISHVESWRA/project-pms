@@ -1,47 +1,37 @@
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import { useNavigate } from "react-router-dom";
 import BreadcrumbNav from "../../components/BreadCrumbs";
 import { FilterMatchMode } from "primereact/api";
 import TextField from "@mui/material/TextField";
+import { useDispatch, useSelector } from "react-redux";
+import { deletePolicy, fetchPolicies } from "./policySlice";
 
 export default function PoliciesList() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { items: policies } = useSelector((state) => state.policies);
+
   const [selectedPolicies, setSelectedPolicies] = useState(null);
-  const [globalFilterValue, setGlobalFilterValue] = useState("");
+  const [globalFilter, setGlobalFilter] = useState("");
 
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
 
-  const policies = [
-    {
-      _id: "1",
-      policyName: "Life Insurance",
-      policyType: "Life",
-      provider: "LIC",
-      policyNumber: "LIC123456",
-      premiumAmount: 12000,
-      frequency: "Yearly",
-      status: "Active",
-      endDate: "2035-12-31",
-    },
-    {
-      _id: "2",
-      policyName: "Health Cover",
-      policyType: "Health",
-      provider: "Star Health",
-      policyNumber: "SH998877",
-      premiumAmount: 8500,
-      frequency: "Yearly",
-      status: "Active",
-      endDate: "2026-06-30",
-    },
-  ];
+  useEffect(() => {
+    dispatch(fetchPolicies());
+  }, [dispatch]);
+
+  const handleSearch = (e) => setGlobalFilter(e.target.value);
+
+  const amountTemplate = (row) => (
+    <span>₹ {row.premiumAmount.toLocaleString("en-IN")}</span>
+  );
 
   const setBreadcrumb = [{ label: "Home", href: "/" }, { label: "Policies" }];
 
@@ -53,25 +43,31 @@ export default function PoliciesList() {
     },
   ];
 
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    setGlobalFilterValue(value);
-    setFilters({
-      global: { value, matchMode: FilterMatchMode.CONTAINS },
-    });
-  };
+  // const handleSearch = (e) => {
+  //   const value = e.target.value;
+  //   setGlobalFilterValue(value);
+  //   setFilters({
+  //     global: { value, matchMode: FilterMatchMode.CONTAINS },
+  //   });
+  // };
 
-  const amountTemplate = (row) => (
-    <span className="font-semibold">₹ {row.premiumAmount}</span>
-  );
+  // const amountTemplate = (row) => (
+  //   <span className="font-semibold">₹ {row.premiumAmount}</span>
+  // );
 
   const actionTemplate = (row) => (
     <div className="flex gap-3">
       <FiEdit
         className="text-blue-500 cursor-pointer"
-        onClick={() => navigate(`/dashboard/policies/edit/${row._id}`)}
+        onClick={() => navigate(`../policies/form/${row._id}`)}
       />
-      <FiTrash2 className="text-red-500 cursor-pointer" />
+      <FiTrash2
+        className="text-red-500 cursor-pointer"
+        onClick={() => {
+          if (window.confirm("Delete this policy?"))
+            dispatch(deletePolicy(row._id));
+        }}
+      />
     </div>
   );
 
@@ -86,7 +82,7 @@ export default function PoliciesList() {
             label="Search Income"
             type="search"
             size="small"
-            value={globalFilterValue}
+            value={globalFilter}
             onChange={handleSearch}
             sx={{ width: 280 }}
           />
@@ -107,13 +103,15 @@ export default function PoliciesList() {
           rowHover
           scrollable
           scrollHeight="400px"
-          filters={filters}
           globalFilterFields={[
-            "expenseName",
-            "category",
-            "paymentMode",
-            "type",
+            "policyName",
+            "policyType",
+            "provider",
+            "policyNumber",
+            "status",
+            "frequency",
           ]}
+          filters={{ global: { value: globalFilter, matchMode: "contains" } }}
           className="my-table"
         >
           <Column selectionMode="multiple" style={{ width: "3rem" }} />
