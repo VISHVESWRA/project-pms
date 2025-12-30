@@ -5,6 +5,8 @@ export const addIncome = createAsyncThunk(
   "income/add",
   async (incomeData, thunkAPI) => {
     try {
+      console.log("income slice");
+
       return await incomeService.createIncome(incomeData);
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -14,13 +16,30 @@ export const addIncome = createAsyncThunk(
   }
 );
 
-export const getIncomeList = createAsyncThunk(
-  "income/list",
+// LIST
+export const fetchIncomes = createAsyncThunk(
+  "income/fetch",
   async (_, thunkAPI) => {
     try {
       return await incomeService.fetchIncomeList();
-    } catch (e) {
-      return thunkAPI.rejectWithValue("Failed to fetch income", e);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to fetch income"
+      );
+    }
+  }
+);
+
+// DELETE
+export const deleteIncome = createAsyncThunk(
+  "income/delete",
+  async (id, thunkAPI) => {
+    try {
+      return await incomeService.deleteIncome(id);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || "Failed to delete income"
+      );
     }
   }
 );
@@ -49,7 +68,7 @@ const incomeSlice = createSlice({
       .addCase(addIncome.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.list.push(action.payload);
+        state.list.unshift(action.payload);
       })
       .addCase(addIncome.rejected, (state, action) => {
         state.loading = false;
@@ -57,8 +76,21 @@ const incomeSlice = createSlice({
       })
 
       // LIST
-      .addCase(getIncomeList.fulfilled, (state, action) => {
+      .addCase(fetchIncomes.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchIncomes.fulfilled, (state, action) => {
+        state.loading = false;
         state.list = action.payload;
+      })
+      .addCase(fetchIncomes.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // DELETE
+      .addCase(deleteIncome.fulfilled, (state, action) => {
+        state.list = state.list.filter((item) => item._id !== action.payload);
       });
   },
 });

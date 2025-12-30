@@ -1,7 +1,8 @@
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import { useNavigate } from "react-router-dom";
@@ -11,9 +12,12 @@ import TextField from "@mui/material/TextField";
 import { FilterMatchMode } from "primereact/api";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
+import { deleteIncome, fetchIncomes } from "./IncomeSlice";
 
 export default function IncomeList() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { list: incomes, loading } = useSelector((state) => state.income);
 
   const [selectedIncomes, setSelectedIncomes] = useState(null);
 
@@ -40,220 +44,6 @@ export default function IncomeList() {
     }));
   };
 
-  // ✅ DUMMY DATA
-  const incomes = [
-    {
-      _id: "1",
-      sourceName: "Salary",
-      category: "Job",
-      amount: 45000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Active",
-      date: "2025-01-05",
-    },
-    {
-      _id: "2",
-      sourceName: "Freelancing",
-      category: "Online",
-      amount: 18000,
-      frequency: "One Time",
-      paymentMode: "UPI",
-      type: "Active",
-      date: "2025-01-12",
-    },
-    {
-      _id: "3",
-      sourceName: "House Rent",
-      category: "Rental",
-      amount: 12000,
-      frequency: "Monthly",
-      paymentMode: "Cash",
-      type: "Passive",
-      date: "2025-01-01",
-    },
-    {
-      _id: "4",
-      sourceName: "Mutual Fund",
-      category: "Investment",
-      amount: 6000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Passive",
-      date: "2025-01-10",
-    },
-    {
-      _id: "5",
-      sourceName: "Mutual Fund",
-      category: "Investment",
-      amount: 6000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Passive",
-      date: "2025-01-10",
-    },
-    {
-      _id: "6",
-      sourceName: "Mutual Fund",
-      category: "Investment",
-      amount: 6000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Passive",
-      date: "2025-01-10",
-    },
-    {
-      _id: "6",
-      sourceName: "Mutual Fund",
-      category: "Investment",
-      amount: 6000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Passive",
-      date: "2025-01-10",
-    },
-    {
-      _id: "6",
-      sourceName: "Mutual Fund",
-      category: "Investment",
-      amount: 6000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Passive",
-      date: "2025-01-10",
-    },
-    {
-      _id: "6",
-      sourceName: "Mutual Fund",
-      category: "Investment",
-      amount: 6000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Passive",
-      date: "2025-01-10",
-    },
-    {
-      _id: "6",
-      sourceName: "Mutual Fund",
-      category: "Investment",
-      amount: 6000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Passive",
-      date: "2025-01-10",
-    },
-    {
-      _id: "6",
-      sourceName: "Mutual Fund",
-      category: "Investment",
-      amount: 6000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Passive",
-      date: "2025-01-10",
-    },
-    {
-      _id: "6",
-      sourceName: "Mutual Fund",
-      category: "Investment",
-      amount: 6000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Passive",
-      date: "2025-01-10",
-    },
-    {
-      _id: "6",
-      sourceName: "Mutual Fund",
-      category: "Investment",
-      amount: 6000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Passive",
-      date: "2025-01-10",
-    },
-    {
-      _id: "6",
-      sourceName: "Mutual Fund",
-      category: "Investment",
-      amount: 6000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Passive",
-      date: "2025-01-10",
-    },
-    {
-      _id: "6",
-      sourceName: "Mutual Fund",
-      category: "Investment",
-      amount: 6000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Passive",
-      date: "2025-01-10",
-    },
-    {
-      _id: "6",
-      sourceName: "Mutual Fund",
-      category: "Investment",
-      amount: 6000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Passive",
-      date: "2025-01-10",
-    },
-    {
-      _id: "6",
-      sourceName: "Mutual Fund",
-      category: "Investment",
-      amount: 6000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Passive",
-      date: "2025-01-10",
-    },
-    {
-      _id: "6",
-      sourceName: "Mutual Fund",
-      category: "Investment",
-      amount: 6000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Passive",
-      date: "2025-01-10",
-    },
-    {
-      _id: "6",
-      sourceName: "Mutual Fund",
-      category: "Investment",
-      amount: 6000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Passive",
-      date: "2025-01-10",
-    },
-    {
-      _id: "6",
-      sourceName: "Mutual Fund",
-      category: "Investment",
-      amount: 6000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Passive",
-      date: "2025-01-10",
-    },
-    {
-      _id: "6",
-      sourceName: "Mutual Fund",
-      category: "Investment",
-      amount: 6000,
-      frequency: "Monthly",
-      paymentMode: "Bank",
-      type: "Passive",
-      date: "2025-01-10",
-    },
-  ];
-
   const setBreadcrumb = [
     { label: "Home", href: "/" },
     { label: "Income List" },
@@ -266,6 +56,10 @@ export default function IncomeList() {
       onClick: () => navigate("/dashboard/income/form"),
     },
   ];
+
+  useEffect(() => {
+    dispatch(fetchIncomes());
+  }, [dispatch]);
 
   const amountTemplate = (rowData) => (
     <span className="font-semibold text-gray-700">
@@ -286,6 +80,7 @@ export default function IncomeList() {
       <FiTrash2
         size={18}
         className="text-red-500 cursor-pointer hover:text-red-700"
+        onClick={() => dispatch(deleteIncome(rowData._id))}
       />
     </div>
   );
@@ -316,6 +111,14 @@ export default function IncomeList() {
           className="p-inputtext-sm w-56"
         /> */}
       </div>
+
+      {/* if (loading) {
+  return (
+    <div className="text-center py-10 text-gray-500">
+      Loading incomes...
+    </div>
+  );
+} */}
 
       <div className="card m-2">
         <div className="overflow-x-auto">
