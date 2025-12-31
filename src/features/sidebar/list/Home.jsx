@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import api from "../../../app/axios";
 
 function Home() {
-  const [totalIncome, setTotalIncome] = useState(0);
+  const [totalAmt, setTotalAmt] = useState(0);
 
   const fetchTotal = async () => {
-    const { data } = await api.get("/income/total");
-    setTotalIncome(data.total);
+    const { data } = await api.get("/dashboard/total");
+    setTotalAmt(data);
   };
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -19,17 +19,21 @@ function Home() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white p-6 rounded shadow">
           <h3 className="text-gray-500">Income</h3>
-          <p className="text-2xl font-bold text-green-600">₹{totalIncome}</p>
+          <p className="text-2xl font-bold text-green-600">
+            ₹{totalAmt.income}
+          </p>
         </div>
 
         <div className="bg-white p-6 rounded shadow">
           <h3 className="text-gray-500">Expenses</h3>
-          <p className="text-2xl font-bold text-red-600">₹20,000</p>
+          <p className="text-2xl font-bold text-red-600">₹{totalAmt.expense}</p>
         </div>
 
         <div className="bg-white p-6 rounded shadow">
           <h3 className="text-gray-500">Balance</h3>
-          <p className="text-2xl font-bold text-blue-600">₹30,000</p>
+          <p className="text-2xl font-bold text-blue-600">
+            ₹{totalAmt.balance}{" "}
+          </p>
         </div>
       </div>
     </div>

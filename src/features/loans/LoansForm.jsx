@@ -1,22 +1,38 @@
 import { useForm, Controller } from "react-hook-form";
 import { TextField, MenuItem, Button, Divider } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import BreadcrumbNav from "../../components/BreadCrumbs";
+import { useEffect } from "react";
+import api from "../../app/axios";
+import { createLoan, updateLoan } from "./LoanSlice";
+import { useDispatch } from "react-redux";
 
 export default function LoanForm() {
+  const { id } = useParams();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { register, handleSubmit, control } = useForm();
+  const { register, handleSubmit, control, reset } = useForm();
 
-  const onSubmit = (data) => {
-    console.log("Loan Data:", data);
-    navigate("../loans/list");
-  };
+  useEffect(() => {
+    if (id) {
+      api.get(`/loans/${id}`).then((res) => reset(res.data));
+    }
+  }, [id]);
 
   const breadcrumbs = [
     { label: "Home", href: "/" },
     { label: "Loans", href: "/dashboard/loans/list" },
     { label: "Add Loan" },
   ];
+
+  const onSubmit = (data) => {
+    if (id) {
+      dispatch(updateLoan({ id, data }));
+    } else {
+      dispatch(createLoan(data));
+    }
+    navigate("../loans/list");
+  };
 
   return (
     <>
