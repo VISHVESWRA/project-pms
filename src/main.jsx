@@ -7,7 +7,7 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 import { Provider } from "react-redux";
 import { store } from "./app/store.js";
-import App from "./app.jsx";
+import App from "./App.jsx";
 
 createRoot(document.getElementById("root")).render(
   <PrimeReactProvider>
