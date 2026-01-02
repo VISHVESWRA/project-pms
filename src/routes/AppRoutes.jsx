@@ -22,7 +22,7 @@ import LoanForm from "../features/loans/LoansForm.jsx";
 import LoanList from "../features/loans/LoansList.jsx";
 import ChitList from "../features/chits/ChitsList.jsx";
 import ChitForm from "../features/chits/ChitsForm.jsx";
-import ProtectedRoute from "./protectedRoute.jsx";
+import ProtectedRoute from "./ProtectedRoute.jsx";
 import PublicRoute from "./PublicRoute.jsx";
 
 function AppRoutes() {
