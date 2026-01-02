@@ -3,9 +3,8 @@ import { TextField, MenuItem, Button, Divider } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import BreadcrumbNav from "../../components/BreadCrumbs";
 import { useDispatch } from "react-redux";
-import { addExpense, updateExpense } from "./expenseSlice";
+import { addExpense, updateExpense } from "./ExpenseSlice";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import api from "../../app/axios";
 
 export default function ExpenseForm() {

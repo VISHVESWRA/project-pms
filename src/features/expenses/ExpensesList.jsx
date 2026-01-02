@@ -9,7 +9,7 @@ import BreadcrumbNav from "../../components/BreadCrumbs";
 
 import TextField from "@mui/material/TextField";
 import { FilterMatchMode } from "primereact/api";
-import { deleteExpense, fetchExpenses } from "./expenseSlice";
+import { deleteExpense, fetchExpenses } from "./ExpenseSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function ExpensesList() {

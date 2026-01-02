@@ -8,7 +8,7 @@ import BreadcrumbNav from "../../components/BreadCrumbs";
 import { FilterMatchMode } from "primereact/api";
 import TextField from "@mui/material/TextField";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePolicy, fetchPolicies } from "./policySlice";
+import { deletePolicy, fetchPolicies } from "./PolicySlice";
 import { Button } from "react-bootstrap";
 
 export default function PoliciesList() {

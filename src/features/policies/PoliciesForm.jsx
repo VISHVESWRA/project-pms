@@ -5,7 +5,7 @@ import BreadcrumbNav from "../../components/BreadCrumbs";
 import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import api from "../../app/axios";
-import { addPolicy, updatePolicy } from "./policySlice";
+import { addPolicy, updatePolicy } from "./PolicySlice";
 
 export default function PolicyForm() {
   const { id } = useParams();
