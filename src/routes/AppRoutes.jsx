@@ -24,6 +24,8 @@ import ChitList from "../features/chits/ChitsList.jsx";
 import ChitForm from "../features/chits/ChitsForm.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import PublicRoute from "./PublicRoute.jsx";
+import PolicyStatus from "../features/policies/PolicyStatus.jsx";
+import HRDashboard from "../layouts/Dashboard.jsx";
 
 function AppRoutes() {
   return (
@@ -73,6 +75,7 @@ function AppRoutes() {
         <Route path="policies/form" element={<PolicyForm />} />
         <Route path="policies/form/:id" element={<PolicyForm />} />
         <Route path="policies/list" element={<PoliciesList />} />
+        <Route path="policies/status" element={<PolicyStatus />} />
 
         <Route path="loans/form" element={<LoanForm />} />
         <Route path="loans/form/:id" element={<LoanForm />} />
@@ -81,6 +84,11 @@ function AppRoutes() {
         <Route path="chits/form" element={<ChitForm />} />
         <Route path="chits/form/:id" element={<ChitForm />} />
         <Route path="chits/list" element={<ChitList />} />
+      </Route>
+      <Route path="/hrDashboard" element={<HRDashboard />}>
+        <Route index element={<Home />} />
+        <Route path="home" element={<Home />} />
+        <Route path="policiesStatus" element={<PolicyStatus />} />
       </Route>
     </Routes>
   );
