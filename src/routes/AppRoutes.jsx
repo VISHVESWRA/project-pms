@@ -26,6 +26,7 @@ import ProtectedRoute from "./ProtectedRoute.jsx";
 import PublicRoute from "./PublicRoute.jsx";
 import PolicyStatus from "../features/policies/PolicyStatus.jsx";
 import HRDashboard from "../layouts/Dashboard.jsx";
+import LoanStatus from "../features/loans/LoanStatus.jsx";
 
 function AppRoutes() {
   return (
@@ -89,6 +90,7 @@ function AppRoutes() {
         <Route index element={<Home />} />
         <Route path="home" element={<Home />} />
         <Route path="policiesStatus" element={<PolicyStatus />} />
+        <Route path="loanStatus" element={<LoanStatus />} />
       </Route>
     </Routes>
   );

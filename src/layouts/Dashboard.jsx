@@ -13,7 +13,7 @@ export default function HRDashboard() {
     { name: "Income", path: "/income" },
     { name: "Expenses", path: "/expenses" },
     { name: "Policies", path: "/hrDashboard/policiesStatus" },
-    { name: "Loans", path: "/loans" },
+    { name: "Loans", path: "/hrDashboard/loanStatus" },
     { name: "Chits", path: "/chits" },
     { name: "Misc", path: "/misc" },
     { name: "Setting", path: "/home" },
@@ -112,7 +112,7 @@ export default function HRDashboard() {
           </h1>
 
           {/* Stats Bar */}
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-6 sm:mb-8">
+          {/* <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-6 sm:mb-8">
             <div className="flex flex-wrap gap-3 sm:gap-4">
               <div>
                 <div className="text-xs sm:text-sm text-gray-600 mb-2">
@@ -171,7 +171,7 @@ export default function HRDashboard() {
                 <div className="text-xs sm:text-sm text-gray-600">Projects</div>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Outlet Content Area */}
           <div className="mt-6">

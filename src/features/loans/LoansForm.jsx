@@ -135,7 +135,7 @@ export default function LoanForm() {
             size="small"
             fullWidth
             className="md:col-span-4"
-            {...register("emi")}
+            {...register("emiAmount", { required: true })}
           />
 
           {/* Start Date */}
@@ -158,26 +158,6 @@ export default function LoanForm() {
             InputLabelProps={{ shrink: true }}
             className="md:col-span-6"
             {...register("endDate")}
-          />
-
-          {/* Status */}
-          <Controller
-            name="status"
-            control={control}
-            defaultValue="active"
-            render={({ field }) => (
-              <TextField
-                {...field}
-                select
-                label="Status"
-                size="small"
-                fullWidth
-                className="md:col-span-6"
-              >
-                <MenuItem value="active">Active</MenuItem>
-                <MenuItem value="closed">Closed</MenuItem>
-              </TextField>
-            )}
           />
 
           {/* Notes */}
