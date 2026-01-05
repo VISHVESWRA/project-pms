@@ -1,76 +1,40 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { FilterMatchMode } from "primereact/api";
-import { Button, Chip, Divider, TextField, MenuItem } from "@mui/material";
-import { Plus, Pencil } from "lucide-react";
+import { useEffect, useState } from "react";
+import { FiEdit, FiTrash2, FiBarChart2 } from "react-icons/fi";
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
+import { useNavigate } from "react-router-dom";
 import BreadcrumbNav from "../../components/BreadCrumbs";
+import { FilterMatchMode } from "primereact/api";
+import TextField from "@mui/material/TextField";
+import { useDispatch, useSelector } from "react-redux";
+import { Button } from "react-bootstrap";
+import { deleteChit, fetchChits } from "./ChitSliece";
 
-export default function ChitList() {
+export default function ChitsList() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { list: chits } = useSelector((state) => state.chits);
 
-  // ---------------- Breadcrumb ----------------
-  const breadcrumbs = [{ label: "Home", href: "/" }, { label: "Chits" }];
+  const [globalFilterValue, setGlobalFilterValue] = useState("");
+  const [selectedChits, setSelectedChits] = useState(null);
 
-  // ---------------- Filters ----------------
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    startDate: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
     status: { value: null, matchMode: FilterMatchMode.EQUALS },
   });
 
-  const [globalFilterValue, setGlobalFilterValue] = useState("");
+  const [monthFilter, setMonthFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState("");
 
-  // ---------------- Dummy Data ----------------
-  const chits = [
-    {
-      id: 1,
-      name: "Gold Chit",
-      amount: 100000,
-      monthly: 5000,
-      members: 20,
-      tenure: 20,
-      status: "active",
-      startDate: "2025-01-10",
-    },
-    {
-      id: 2,
-      name: "Savings Chit",
-      amount: 200000,
-      monthly: 10000,
-      members: 20,
-      tenure: 20,
-      status: "closed",
-      startDate: "2025-03-05",
-    },
-  ];
+  // ---------------- Fetch ----------------
+  useEffect(() => {
+    dispatch(fetchChits());
+  }, [dispatch]);
 
-  const monthOptions = [
-    { label: "January", value: 0 },
-    { label: "February", value: 1 },
-    { label: "March", value: 2 },
-    { label: "April", value: 3 },
-    { label: "May", value: 4 },
-    { label: "June", value: 5 },
-    { label: "July", value: 6 },
-    { label: "August", value: 7 },
-    { label: "September", value: 8 },
-    { label: "October", value: 9 },
-    { label: "November", value: 10 },
-    { label: "December", value: 11 },
-  ];
-
-  const filteredChits = chits.filter((chit) => {
-    if (selectedMonth === "") return true;
-
-    const month = new Date(chit.startDate).getMonth();
-    return month === selectedMonth;
-  });
-
-  // ---------------- Handlers ----------------
-  const onSearchChange = (e) => {
+  // ---------------- Search ----------------
+  const handleSearch = (e) => {
     const value = e.target.value;
     setGlobalFilterValue(value);
     setFilters((prev) => ({
@@ -79,130 +43,185 @@ export default function ChitList() {
     }));
   };
 
-  const onStatusChange = (e) => {
-    const value = e.target.value;
-    setStatusFilter(value);
-    setFilters((prev) => ({
-      ...prev,
-      status: { value, matchMode: FilterMatchMode.EQUALS },
-    }));
-  };
+  // ---------------- Month Filter ----------------
+  useEffect(() => {
+    if (monthFilter) {
+      setFilters((prev) => ({
+        ...prev,
+        startDate: {
+          value: monthFilter,
+          matchMode: FilterMatchMode.STARTS_WITH,
+        },
+      }));
+    } else {
+      setFilters((prev) => ({
+        ...prev,
+        startDate: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+      }));
+    }
+  }, [monthFilter]);
 
-  // ---------------- Templates ----------------
-  const statusTemplate = (row) => (
-    <Chip
-      label={row.status === "active" ? "Active" : "Closed"}
-      color={row.status === "active" ? "success" : "default"}
-      size="small"
-    />
+  // ---------------- Status Filter ----------------
+  useEffect(() => {
+    if (statusFilter) {
+      setFilters((prev) => ({
+        ...prev,
+        status: {
+          value: statusFilter,
+          matchMode: FilterMatchMode.EQUALS,
+        },
+      }));
+    } else {
+      setFilters((prev) => ({
+        ...prev,
+        status: { value: null, matchMode: FilterMatchMode.EQUALS },
+      }));
+    }
+  }, [statusFilter]);
+
+  // ---------------- Breadcrumb ----------------
+  const breadcrumbs = [{ label: "Home", href: "/" }, { label: "Chits" }];
+
+  const sideNavButtons = [
+    {
+      label: "Add",
+      icon: <AddCircleOutlineRoundedIcon fontSize="small" />,
+      onClick: () => navigate("/dashboard/chits/form"),
+    },
+  ];
+
+  // ---------------- Paginator Buttons ----------------
+  const paginatorLeft = (
+    <Button type="button" icon="pi pi-refresh" severity="secondary" />
+  );
+  const paginatorRight = (
+    <Button type="button" icon="pi pi-download" severity="secondary" />
   );
 
+  // ---------------- Actions ----------------
   const actionTemplate = (row) => (
-    <Button
-      size="small"
-      startIcon={<Pencil size={14} />}
-      onClick={() => navigate(`../chit/edit/${row.id}`)}
-    >
-      Edit
-    </Button>
+    <div className="flex gap-3">
+      <FiBarChart2
+        className="text-green-600 cursor-pointer"
+        title="Status"
+        onClick={() => navigate(`../chits/status/${row._id}`)}
+      />
+      <FiEdit
+        className="text-blue-500 cursor-pointer"
+        title="Edit"
+        onClick={() => navigate(`../chits/form/${row._id}`)}
+      />
+      <FiTrash2
+        className="text-red-500 cursor-pointer"
+        title="Delete"
+        onClick={() => {
+          if (window.confirm("Delete this chit?")) {
+            dispatch(deleteChit(row._id));
+          }
+        }}
+      />
+    </div>
   );
 
   return (
     <>
-      <BreadcrumbNav items={breadcrumbs} />
+      <BreadcrumbNav items={breadcrumbs} sideNavButtons={sideNavButtons} />
 
-      <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-sm border">
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-800">Chits</h2>
-            <p className="text-sm text-gray-500">
-              Track and manage your chit funds
-            </p>
-          </div>
+      {/* Filters */}
+      <div className="flex flex-wrap gap-4 justify-between items-center mb-3">
+        <TextField
+          label="Search Chits"
+          size="small"
+          type="search"
+          value={globalFilterValue}
+          onChange={handleSearch}
+          sx={{ width: 280 }}
+        />
 
-          <Button
-            variant="contained"
-            startIcon={<Plus size={16} />}
-            onClick={() => navigate("../chits/form")}
-          >
-            Add Chit
-          </Button>
-        </div>
+        <TextField
+          label="Filter by Month"
+          size="small"
+          type="month"
+          value={monthFilter}
+          onChange={(e) => setMonthFilter(e.target.value)}
+        />
 
-        <Divider />
+        <TextField
+          label="Filter by Status"
+          size="small"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        />
 
-        {/* Filters (Loans style) */}
-        <div className="px-6 py-4 flex flex-wrap gap-4">
-          <TextField
-            label="Search"
-            size="small"
-            value={globalFilterValue}
-            onChange={onSearchChange}
-            sx={{ width: 260 }}
+        <button
+          className="px-3 py-1 border rounded bg-gray-100 hover:bg-gray-200"
+          onClick={() => {
+            setGlobalFilterValue("");
+            setMonthFilter("");
+            setStatusFilter("");
+          }}
+        >
+          Clear Filters
+        </button>
+      </div>
+
+      {/* Table */}
+      <div className="card m-2">
+        <DataTable
+          value={chits}
+          dataKey="_id"
+          selection={selectedChits}
+          onSelectionChange={(e) => setSelectedChits(e.value)}
+          selectionMode="checkbox"
+          paginator
+          rows={5}
+          rowsPerPageOptions={[5, 10, 25]}
+          scrollable
+          scrollHeight="calc(100vh - 260px)"
+          filters={filters}
+          globalFilterFields={["chitName", "groupName", "status"]}
+          showGridlines
+        >
+          <Column selectionMode="multiple" headerStyle={{ width: "3rem" }} />
+
+          <Column field="chitName" header="Chit Name" />
+          <Column field="groupName" header="Group" />
+
+          <Column
+            header="Total Amount"
+            body={(row) => `₹${row.totalAmount?.toLocaleString()}`}
           />
 
-          <TextField
-            select
-            label="Status"
-            size="small"
-            value={statusFilter}
-            onChange={onStatusChange}
-            sx={{ width: 180 }}
-          >
-            <MenuItem value="">All</MenuItem>
-            <MenuItem value="active">Active</MenuItem>
-            <MenuItem value="closed">Closed</MenuItem>
-          </TextField>
+          <Column
+            header="Monthly EMI"
+            body={(row) => `₹${row.monthlyAmount?.toLocaleString()}`}
+          />
 
-          <TextField
-            select
-            label="Month"
-            size="small"
-            value={selectedMonth}
-            onChange={(e) => setSelectedMonth(e.target.value)}
-            sx={{ width: 180 }}
-          >
-            <MenuItem value="">All</MenuItem>
-            {monthOptions.map((m) => (
-              <MenuItem key={m.value} value={m.value}>
-                {m.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </div>
+          <Column
+            header="Progress"
+            body={(row) => `${row.paidMonths}/${row.duration}`}
+          />
 
-        {/* Table */}
-        <div className="overflow-x-auto">
-          <DataTable
-            value={filteredChits}
-            dataKey="id"
-            filters={filters}
-            globalFilterFields={["name"]}
-            paginator
-            rows={5}
-            rowsPerPageOptions={[5, 10, 25]}
-            showGridlines
-            className="p-datatable-sm"
-            responsiveLayout="scroll"
-          >
-            <Column field="name" header="Chit Name" />
-            <Column
-              field="amount"
-              header="Total Amount"
-              body={(row) => `₹${row.amount.toLocaleString("en-IN")}`}
-            />
-            <Column
-              field="monthly"
-              header="Monthly"
-              body={(row) => `₹${row.monthly.toLocaleString("en-IN")}`}
-            />
-            <Column field="members" header="Members" />
-            <Column field="tenure" header="Tenure (Months)" />
-            <Column field="status" header="Status" body={statusTemplate} />
-            <Column header="Actions" body={actionTemplate} />
-          </DataTable>
-        </div>
+          <Column
+            field="status"
+            header="Status"
+            body={(row) => (
+              <span
+                className={`px-2 py-1 rounded text-xs font-semibold ${
+                  row.status === "active"
+                    ? "bg-orange-100 text-orange-700"
+                    : row.status === "upcoming"
+                    ? "bg-blue-100 text-blue-700"
+                    : "bg-green-100 text-green-700"
+                }`}
+              >
+                {row.status.toUpperCase()}
+              </span>
+            )}
+          />
+
+          <Column header="Actions" body={actionTemplate} />
+        </DataTable>
       </div>
     </>
   );

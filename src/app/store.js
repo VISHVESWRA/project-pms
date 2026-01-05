@@ -3,6 +3,7 @@ import incomeReducer from "../features/income/IncomeSlice";
 import expenseReducer from "../features/expenses/ExpenseSlice";
 import policyReducer from "../features/policies/PolicySlice";
 import LoanReducer from "../features/loans/LoanSlice";
+import ChitReducer from "../features/chits/ChitSliece";
 
 export const store = configureStore({
   reducer: {
@@ -10,5 +11,6 @@ export const store = configureStore({
     expenses: expenseReducer,
     policies: policyReducer,
     loans: LoanReducer,
+    chits: ChitReducer,
   },
 });

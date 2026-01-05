@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/expenses";
+const API_URL = "https://project-pms-backend.onrender.com/api/expenses";
 
 // Async Thunks
 export const fetchExpenses = createAsyncThunk("expenses/fetch", async () => {

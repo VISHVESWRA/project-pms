@@ -32,7 +32,7 @@ export default function LoanList() {
       <FiEdit
         size={18}
         className="text-blue-500 cursor-pointer hover:text-blue-700"
-        onClick={() => navigate(`../loan/form/${rowData._id}`)}
+        onClick={() => navigate(`../loans/form/${rowData._id}`)}
       />
       <FiTrash2
         size={18}

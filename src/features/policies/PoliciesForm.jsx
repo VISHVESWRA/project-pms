@@ -18,7 +18,7 @@ export default function PolicyForm() {
     if (id) {
       setLoading(true);
       api
-        .get(`http://localhost:5000/api/policies/${id}`)
+        .get(`https://project-pms-backend.onrender.com/api/policies/${id}`)
         .then((res) => {
           reset(res.data);
           setLoading(false);

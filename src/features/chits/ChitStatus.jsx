@@ -11,53 +11,54 @@ import {
   Clock,
 } from "lucide-react";
 
-export default function LoanStatus() {
-  const [loans, setLoans] = useState([]);
+export default function ChitStatus() {
+  const [chits, setChits] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [activeFilter, setActiveFilter] = useState("all");
 
-  const fetchLoans = async () => {
-    const res = await api.get("/loans");
-    setLoans(res.data);
+  const fetchChits = async () => {
+    const res = await api.get("/chits");
+    setChits(res.data);
   };
 
-  const handlePayEmi = async (loanId) => {
-    if (!window.confirm("Confirm EMI payment?")) return;
+  const handlePayChit = async (chitId) => {
+    if (!window.confirm("Confirm monthly payment?")) return;
 
-    try {
-      await api.post(`/loans/${loanId}/pay-emi`);
-      fetchLoans();
-    } catch (err) {
-      alert(err.response?.data?.message || "Payment failed");
-    }
+    await api.post(`/chits/${chitId}/pay`);
+    fetchChits();
   };
 
   useEffect(() => {
-    fetchLoans();
+    fetchChits();
   }, []);
 
   const handleAdd = () => {
-    navigate("/dashboard/loans/list");
+    navigate("/dashboard/chits/list");
   };
 
-  const filteredLoans = loans.filter((loan) => {
+  const filteredChits = chits.filter((chit) => {
     if (activeFilter === "all") return true;
-    return loan.status === activeFilter;
+    return chit.status === activeFilter;
   });
 
   // Calculate stats
   const stats = {
-    all: loans.length,
-    active: loans.filter((l) => l.status === "active").length,
-    upcoming: loans.filter((l) => l.status === "upcoming").length,
-    closed: loans.filter((l) => l.status === "closed").length,
-    totalRemaining: loans
-      .filter((l) => l.status === "active")
-      .reduce((sum, l) => sum + l.remainingBalance, 0),
-    monthlyEmi: loans
-      .filter((l) => l.status === "active")
-      .reduce((sum, l) => sum + l.emiAmount, 0),
+    all: chits.length,
+    active: chits.filter((c) => c.status === "active").length,
+    upcoming: chits.filter((c) => c.status === "upcoming").length,
+    closed: chits.filter((c) => c.status === "closed").length,
+
+    totalRemaining: chits
+      .filter((c) => c.status === "active")
+      .reduce(
+        (sum, c) => sum + (c.duration - c.paidMonths) * c.monthlyAmount,
+        0
+      ),
+
+    monthlyEmi: chits
+      .filter((c) => c.status === "active")
+      .reduce((sum, c) => sum + c.monthlyAmount, 0),
   };
 
   const filters = [
@@ -110,7 +111,7 @@ export default function LoanStatus() {
     //         {/* Balance */}
     //         <p className="text-sm text-gray-600 mb-1">Remaining Balance</p>
     //         <p className="text-lg font-bold text-gray-900 mb-3">
-    //           ₹{loan.remainingBalance?.toLocaleString()}
+    //           ₹{loan.(duration - paidMonths) * monthlyAmount?.toLocaleString()}
     //         </p>
 
     //         {/* Progress */}
@@ -125,7 +126,7 @@ export default function LoanStatus() {
     //         <div className="flex justify-between text-xs text-gray-500">
     //           <span>{loan.progress}% paid</span>
     //           <span>
-    //             {loan.paidEmis}/{loan.tenure} EMIs
+    //             {loan.paidMonths}/{loan.duration} EMIs
     //           </span>
     //         </div>
 
@@ -153,9 +154,9 @@ export default function LoanStatus() {
       {/* Header */}
       <div className="flex justify-between items-start mb-6">
         <div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Loan Status</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">Chit Status</h2>
           <p className="text-gray-600">
-            Track EMI progress and remaining balances
+            Track monthly contributions and progress
           </p>
         </div>
         <button
@@ -163,7 +164,7 @@ export default function LoanStatus() {
           className="flex items-center gap-2 px-5 py-2.5 bg-linear-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl hover:shadow-lg transition-all"
         >
           <Plus className="w-5 h-5" />
-          Add Loan
+          Add Chit
         </button>
       </div>
 
@@ -240,7 +241,7 @@ export default function LoanStatus() {
 
       {/* Loans Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {filteredLoans.length === 0 ? (
+        {filteredChits.length === 0 ? (
           <div className="col-span-full bg-white rounded-xl border border-gray-200 p-12 text-center">
             <AlertCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -251,30 +252,30 @@ export default function LoanStatus() {
             </p>
           </div>
         ) : (
-          filteredLoans.map((loan) => (
+          filteredChits.map((chit) => (
             <div
-              key={loan._id}
+              key={chit._id}
               className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-lg transition-all"
             >
               {/* Header */}
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="font-semibold text-gray-800 text-lg">
-                    {loan.loanName}
+                    {chit.chitName}
                   </h3>
-                  <p className="text-sm text-gray-500">{loan.lender}</p>
+                  <p className="text-sm text-gray-500">{chit.groupName}</p>
                 </div>
 
                 <span
                   className={`text-xs px-3 py-1 rounded-full font-semibold border ${
-                    loan.status === "closed"
+                    chit.status === "closed"
                       ? "bg-green-50 text-green-700 border-green-200"
-                      : loan.status === "upcoming"
+                      : chit.status === "upcoming"
                       ? "bg-blue-50 text-blue-700 border-blue-200"
                       : "bg-orange-50 text-orange-700 border-orange-200"
                   }`}
                 >
-                  {loan.status.toUpperCase()}
+                  {chit.status.toUpperCase()}
                 </span>
               </div>
 
@@ -282,58 +283,64 @@ export default function LoanStatus() {
               <div className="bg-gray-50 rounded-lg p-3 mb-4">
                 <p className="text-xs text-gray-600 mb-1">Remaining Balance</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  ₹{loan.remainingBalance?.toLocaleString()}
+                  <p className="text-2xl font-bold text-gray-900">
+                    ₹
+                    {(
+                      (chit.duration - chit.paidMonths) *
+                      chit.monthlyAmount
+                    ).toLocaleString()}
+                  </p>
                 </p>
               </div>
 
               {/* Progress */}
               <div className="mb-4">
                 <div className="flex justify-between text-xs text-gray-600 mb-2">
-                  <span>{loan.progress}% paid</span>
+                  <span>{chit.progress}% paid</span>
                   <span>
-                    {loan.paidEmis}/{loan.tenure} EMIs
+                    {chit.paidMonths}/{chit.duration} EMIs
                   </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2.5">
                   <div
                     className={`h-2.5 rounded-full transition-all ${
-                      loan.status === "closed"
+                      chit.status === "closed"
                         ? "bg-green-600"
-                        : loan.status === "upcoming"
+                        : chit.status === "upcoming"
                         ? "bg-blue-600"
                         : "bg-orange-600"
                     }`}
-                    style={{ width: `${loan.progress}%` }}
+                    style={{ width: `${chit.progress}%` }}
                   />
                 </div>
               </div>
 
               {/* Additional Info */}
               <div className="text-xs text-gray-600 mb-4">
-                {loan.status === "active" && loan.nextDueDate && (
+                {chit.status === "active" && chit.nextDueDate && (
                   <div className="flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     <span>
                       Next EMI:{" "}
-                      {new Date(loan.nextDueDate).toLocaleDateString("en-IN")}
+                      {new Date(chit.nextDueDate).toLocaleDateString("en-IN")}
                     </span>
                   </div>
                 )}
-                {loan.status === "upcoming" && loan.startDate && (
+                {chit.status === "upcoming" && chit.startDate && (
                   <div className="flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     <span>
                       Starts:{" "}
-                      {new Date(loan.startDate).toLocaleDateString("en-IN")}
+                      {new Date(chit.startDate).toLocaleDateString("en-IN")}
                     </span>
                   </div>
                 )}
-                {loan.status === "closed" && loan.closedDate && (
+                {chit.status === "closed" && chit.closedDate && (
                   <div className="flex items-center gap-1">
                     <CheckCircle className="w-3 h-3" />
                     <span>
                       Closed:{" "}
-                      {new Date(loan.closedDate).toLocaleDateString("en-IN")}
+                      {new Date(chit.closedDate).toLocaleDateString("en-IN")}
                     </span>
                   </div>
                 )}
@@ -341,21 +348,21 @@ export default function LoanStatus() {
 
               {/* Action */}
               <button
-                onClick={() => handlePayEmi(loan._id)}
+                onClick={() => handlePayChit(chit._id)}
                 disabled={
-                  loan.status === "closed" || loan.status === "upcoming"
+                  chit.status === "closed" || chit.status === "upcoming"
                 }
                 className={`w-full py-2.5 rounded-lg text-sm font-medium transition-all ${
-                  loan.status === "closed" || loan.status === "upcoming"
+                  chit.status === "closed" || chit.status === "upcoming"
                     ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                     : "bg-blue-600 text-white hover:bg-blue-700 shadow-sm hover:shadow-md"
                 }`}
               >
-                {loan.status === "closed"
-                  ? "Loan Closed"
-                  : loan.status === "upcoming"
+                {chit.status === "closed"
+                  ? "Chit Closed"
+                  : chit.status === "upcoming"
                   ? "Not Started"
-                  : `Pay EMI (₹${loan.emiAmount?.toLocaleString()})`}
+                  : `Pay Monthly (₹${chit.monthlyAmount.toLocaleString()})`}
               </button>
             </div>
           ))

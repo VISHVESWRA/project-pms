@@ -34,7 +34,7 @@ export default function ExpenseForm() {
     if (id) {
       setLoading(true);
       api
-        .get(`http://localhost:5000/api/expenses/${id}`)
+        .get(`https://project-pms-backend.onrender.com/api/expenses/${id}`)
         .then((res) => {
           reset(res.data);
           setLoading(false);

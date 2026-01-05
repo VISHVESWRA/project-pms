@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../app/axios";
 
-const API_URL = "http://localhost:5000/api/policies";
+const API_URL = "https://project-pms-backend.onrender.com/api/policies";
 
 export const fetchPolicies = createAsyncThunk("policies/fetch", async () => {
   const res = await api.get(API_URL);

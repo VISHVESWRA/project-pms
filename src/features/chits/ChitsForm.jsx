@@ -1,61 +1,83 @@
-import { Button, Divider, MenuItem, TextField } from "@mui/material";
-import { useForm, Controller } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { TextField, Button, Divider } from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import BreadcrumbNav from "../../components/BreadCrumbs";
+import { createChit, updateChit } from "./ChitSliece";
 
 export default function ChitForm() {
+  const { id } = useParams();
+  const isEdit = Boolean(id);
+
+  const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
-  const { register, handleSubmit, control, watch } = useForm();
+  const dispatch = useDispatch();
 
-  const totalAmount = watch("amount");
-  const members = watch("members");
+  const chit = useSelector((state) =>
+    state.chits.list.find((c) => c._id === id)
+  );
 
-  const monthlyAmount =
-    totalAmount && members ? Math.round(totalAmount / members) : "";
-
-  const breadcrumbs = [
-    { label: "Home", href: "/" },
-    { label: "Chits", href: "../chits/list" },
-    { label: "Add Chit" },
-  ];
+  useEffect(() => {
+    if (isEdit && chit) {
+      reset({
+        ...chit,
+        startDate: chit.startDate?.split("T")[0],
+      });
+    }
+  }, [isEdit, chit, reset]);
 
   const onSubmit = (data) => {
+    console.log(data);
+
     const payload = {
       ...data,
-      monthlyAmount,
+      totalAmount: Number(data.totalAmount),
+      monthlyAmount: Number(data.monthlyAmount),
+      duration: Number(data.duration),
     };
-    console.log("Chit Data:", payload);
-    navigate("../chits");
+
+    dispatch(createChit(payload));
+    navigate("../chits/list");
   };
 
   return (
     <>
-      <BreadcrumbNav items={breadcrumbs} />
+      <BreadcrumbNav
+        items={[
+          { label: "Home", href: "/" },
+          { label: "Chits", href: "/dashboard/chits/list" },
+          { label: isEdit ? "Edit Chit" : "Add Chit" },
+        ]}
+      />
 
-      <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-sm border">
-        {/* Header */}
+      <div className="max-w-4xl mx-auto bg-white border rounded-lg">
         <div className="px-6 py-4">
-          <h2 className="text-lg font-semibold text-gray-800">Add Chit</h2>
-          <p className="text-sm text-gray-500">
-            Create and manage your chit fund details
-          </p>
+          <h2 className="text-lg font-semibold">
+            {isEdit ? "Edit Chit" : "Add Chit"}
+          </h2>
         </div>
 
         <Divider />
 
-        {/* Form */}
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="p-6 grid grid-cols-1 md:grid-cols-12 gap-5"
+          className="p-6 grid md:grid-cols-12 gap-5"
         >
           {/* Chit Name */}
           <TextField
             label="Chit Name"
-            placeholder="Gold Chit / Savings Chit"
             size="small"
-            fullWidth
             className="md:col-span-6"
-            {...register("name", { required: true })}
+            {...register("chitName", { required: true })}
+          />
+
+          {/* Group Name */}
+          <TextField
+            label="Group Name"
+            size="small"
+            className="md:col-span-6"
+            {...register("groupName")}
           />
 
           {/* Total Amount */}
@@ -63,59 +85,32 @@ export default function ChitForm() {
             label="Total Amount"
             type="number"
             size="small"
-            fullWidth
-            className="md:col-span-3"
-            {...register("amount", { required: true })}
+            className="md:col-span-4"
+            {...register("totalAmount", {
+              required: true,
+              valueAsNumber: true,
+            })}
           />
 
-          {/* Members */}
+          {/* Monthly Amount */}
           <TextField
-            label="Total Members"
+            label="Monthly Amount"
             type="number"
             size="small"
-            fullWidth
-            className="md:col-span-3"
-            {...register("members", { required: true })}
-          />
-
-          {/* Monthly Amount (Auto) */}
-          <TextField
-            label="Monthly Contribution"
-            size="small"
-            fullWidth
             className="md:col-span-4"
-            value={monthlyAmount}
-            disabled
+            {...register("monthlyAmount", {
+              required: true,
+              valueAsNumber: true,
+            })}
           />
 
-          {/* Tenure */}
+          {/* Duration */}
           <TextField
-            label="Tenure (Months)"
+            label="Duration (Months)"
             type="number"
             size="small"
-            fullWidth
             className="md:col-span-4"
-            {...register("tenure", { required: true })}
-          />
-
-          {/* Status */}
-          <Controller
-            name="status"
-            control={control}
-            defaultValue="active"
-            render={({ field }) => (
-              <TextField
-                {...field}
-                select
-                label="Status"
-                size="small"
-                fullWidth
-                className="md:col-span-4"
-              >
-                <MenuItem value="active">Active</MenuItem>
-                <MenuItem value="closed">Closed</MenuItem>
-              </TextField>
-            )}
+            {...register("duration", { required: true, valueAsNumber: true })}
           />
 
           {/* Start Date */}
@@ -123,32 +118,15 @@ export default function ChitForm() {
             label="Start Date"
             type="date"
             size="small"
-            fullWidth
             InputLabelProps={{ shrink: true }}
             className="md:col-span-6"
             {...register("startDate", { required: true })}
           />
 
-          {/* Notes */}
-          <TextField
-            label="Notes"
-            multiline
-            rows={3}
-            size="small"
-            fullWidth
-            className="md:col-span-12"
-            {...register("notes")}
-          />
-
           {/* Actions */}
-          <div className="md:col-span-12 flex justify-end gap-3 pt-4">
-            <Button
-              variant="outlined"
-              onClick={() => navigate("../chits/list")}
-            >
-              Cancel
-            </Button>
-            <Button variant="contained" type="submit">
+          <div className="md:col-span-12 flex justify-end gap-3">
+            <Button onClick={() => navigate("../chits/list")}>Cancel</Button>
+            <Button type="submit" variant="contained">
               Save Chit
             </Button>
           </div>
@@ -157,4 +135,3 @@ export default function ChitForm() {
     </>
   );
 }
-1;

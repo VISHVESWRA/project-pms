@@ -27,6 +27,7 @@ import PublicRoute from "./PublicRoute.jsx";
 import PolicyStatus from "../features/policies/PolicyStatus.jsx";
 import HRDashboard from "../layouts/Dashboard.jsx";
 import LoanStatus from "../features/loans/LoanStatus.jsx";
+import ChitStatus from "../features/chits/ChitStatus.jsx";
 
 function AppRoutes() {
   return (
@@ -91,6 +92,7 @@ function AppRoutes() {
         <Route path="home" element={<Home />} />
         <Route path="policiesStatus" element={<PolicyStatus />} />
         <Route path="loanStatus" element={<LoanStatus />} />
+        <Route path="chitStatus" element={<ChitStatus />} />
       </Route>
     </Routes>
   );

@@ -5,19 +5,33 @@ import BreadcrumbNav from "../../components/BreadCrumbs";
 import { useEffect } from "react";
 import api from "../../app/axios";
 import { createLoan, updateLoan } from "./LoanSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function LoanForm() {
   const { id } = useParams();
+  const isEdit = Boolean(id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { register, handleSubmit, control, reset } = useForm();
 
+  const loan = useSelector((state) =>
+    state.loans.items.find((item) => item._id === id)
+  );
+
   useEffect(() => {
-    if (id) {
-      api.get(`/loans/${id}`).then((res) => reset(res.data));
+    if (isEdit && loan) {
+      reset({
+        ...loan,
+        date: loan.date?.split("T")[0], // important for date input
+      });
     }
-  }, [id]);
+  }, [isEdit, loan, reset]);
+
+  // useEffect(() => {
+  //   if (id) {
+  //     api.get(`/loans/${id}`).then((res) => reset(res.data));
+  //   }
+  // }, [id]);
 
   const breadcrumbs = [
     { label: "Home", href: "/" },
