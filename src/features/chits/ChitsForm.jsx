@@ -28,16 +28,26 @@ export default function ChitForm() {
   }, [isEdit, chit, reset]);
 
   const onSubmit = (data) => {
-    console.log(data);
+    console.log(isEdit, id);
 
-    const payload = {
-      ...data,
-      totalAmount: Number(data.totalAmount),
-      monthlyAmount: Number(data.monthlyAmount),
-      duration: Number(data.duration),
-    };
+    if (isEdit) {
+      const payload = {
+        ...data,
+        totalAmount: Number(data.totalAmount),
+        monthlyAmount: Number(data.monthlyAmount),
+        duration: Number(data.duration),
+      };
+      dispatch(updateChit({ id, data: payload }));
+    } else {
+      const payload = {
+        ...data,
+        totalAmount: Number(data.totalAmount),
+        monthlyAmount: Number(data.monthlyAmount),
+        duration: Number(data.duration),
+      };
 
-    dispatch(createChit(payload));
+      dispatch(createChit(payload));
+    }
     navigate("../chits/list");
   };
 

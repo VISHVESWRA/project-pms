@@ -1,46 +1,63 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../app/axios";
-import axios from "axios";
 
 /* =======================
    ASYNC THUNKS
 ======================= */
 
-const API_URL = "https://project-pms-backend.onrender.com/api/chits";
-
-// Async Thunks
-export const fetchChits = createAsyncThunk("chits/fetch", async () => {
-  console.log("get");
-
-  const response = await axios.get(API_URL);
-  return response.data;
-});
-
-// export const fetchChits = createAsyncThunk("chits/fetch", async () => {
-//   const res = await api.get("/chits");
-//   console.log(res.data);
-//   return res.data;
-// });
-
-export const createChit = createAsyncThunk("chits/create", async (data) => {
-  const res = await api.post("/chits", data);
-  console.log(res.data);
-
-  return res.data;
-});
-
-export const updateChit = createAsyncThunk(
-  "chits/update",
-  async ({ id, data }) => {
-    const res = await api.put(`/chits/${id}`, data);
-    return res.data;
+// FETCH ALL
+export const fetchChits = createAsyncThunk(
+  "chits/fetch",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await api.get("/chits");
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || err.message);
+    }
   }
 );
 
-export const deleteChit = createAsyncThunk("chits/delete", async (id) => {
-  await api.delete(`/chits/${id}`);
-  return id;
-});
+// CREATE
+export const createChit = createAsyncThunk(
+  "chits/create",
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await api.post("/chits", data);
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || err.message);
+    }
+  }
+);
+
+// UPDATE
+export const updateChit = createAsyncThunk(
+  "chits/update",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      console.log("call updated");
+
+      const res = await api.put(`/chits/${id}`, data);
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || err.message);
+    }
+  }
+);
+
+// DELETE
+export const deleteChit = createAsyncThunk(
+  "chits/delete",
+  async (id, { rejectWithValue }) => {
+    try {
+      await api.delete(`/chits/${id}`);
+      return id;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || err.message);
+    }
+  }
+);
 
 /* =======================
    SLICE
@@ -51,6 +68,7 @@ const chitSlice = createSlice({
   initialState: {
     list: [],
     loading: false,
+    error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -58,10 +76,15 @@ const chitSlice = createSlice({
       // FETCH
       .addCase(fetchChits.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchChits.fulfilled, (state, action) => {
         state.list = action.payload;
         state.loading = false;
+      })
+      .addCase(fetchChits.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
 
       // CREATE
