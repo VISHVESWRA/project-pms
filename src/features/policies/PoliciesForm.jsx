@@ -41,21 +41,21 @@ export default function PolicyForm() {
 
     const formData = new FormData();
 
-    // append normal fields
-    Object.entries(data).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        formData.append(key, value);
+    Object.keys(data).forEach((key) => {
+      if (key === "appliedDocument") {
+        if (data.appliedDocument?.[0]) {
+          formData.append("appliedDocument", data.appliedDocument[0]);
+        }
+      } else {
+        formData.append(key, data[key]);
       }
     });
-
-    // append file
-    if (file) {
-      formData.append("document", file);
-    }
 
     if (id) {
       dispatch(updatePolicy({ id, data: formData }));
     } else {
+      console.log("add", formData);
+
       dispatch(addPolicy(formData));
     }
 
@@ -242,7 +242,8 @@ export default function PolicyForm() {
 
             <input
               type="file"
-              accept=".pdf,image/*"
+              accept=".pdf,.jpg,.png"
+              {...register("appliedDocument")}
               onChange={(e) => setFile(e.target.files[0])}
               className="block w-full text-sm text-gray-500
       file:mr-4 file:py-2 file:px-4

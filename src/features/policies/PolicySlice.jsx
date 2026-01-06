@@ -9,11 +9,9 @@ export const fetchPolicies = createAsyncThunk("policies/fetch", async () => {
 });
 
 export const addPolicy = createAsyncThunk("policies/add", async (policy) => {
-  const res = await api.post(API_URL, policy, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  console.log("add api", policy);
+
+  const res = await api.post(API_URL, policy);
   return res.data;
 });
 
