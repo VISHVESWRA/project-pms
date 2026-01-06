@@ -13,6 +13,7 @@ export default function PolicyForm() {
   const navigate = useNavigate();
   const { register, handleSubmit, control, reset } = useForm();
   const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState(null);
 
   useEffect(() => {
     if (id) {
@@ -36,11 +37,28 @@ export default function PolicyForm() {
   if (loading) return <p>Loading...</p>;
 
   const onSubmit = (data) => {
-    if (id) {
-      dispatch(updatePolicy({ id, data }));
-    } else {
-      dispatch(addPolicy(data));
+    console.log(data);
+
+    const formData = new FormData();
+
+    // append normal fields
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        formData.append(key, value);
+      }
+    });
+
+    // append file
+    if (file) {
+      formData.append("document", file);
     }
+
+    if (id) {
+      dispatch(updatePolicy({ id, data: formData }));
+    } else {
+      dispatch(addPolicy(formData));
+    }
+
     navigate("../policies/list");
   };
 
@@ -215,6 +233,30 @@ export default function PolicyForm() {
             className="md:col-span-12"
             {...register("notes")}
           />
+
+          {/* Applied Document */}
+          <div className="md:col-span-12">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Applied Document (PDF / Image)
+            </label>
+
+            <input
+              type="file"
+              accept=".pdf,image/*"
+              onChange={(e) => setFile(e.target.files[0])}
+              className="block w-full text-sm text-gray-500
+      file:mr-4 file:py-2 file:px-4
+      file:rounded-md file:border-0
+      file:text-sm file:font-semibold
+      file:bg-blue-50 file:text-blue-700
+      hover:file:bg-blue-100"
+            />
+            {id && (
+              <p className="text-xs text-gray-500 mt-1">
+                Uploading a new file will replace the existing document
+              </p>
+            )}
+          </div>
 
           {/* Actions */}
           <div className="md:col-span-12 flex justify-end gap-3 pt-4">

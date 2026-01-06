@@ -9,14 +9,22 @@ export const fetchPolicies = createAsyncThunk("policies/fetch", async () => {
 });
 
 export const addPolicy = createAsyncThunk("policies/add", async (policy) => {
-  const res = await api.post(API_URL, policy);
+  const res = await api.post(API_URL, policy, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return res.data;
 });
 
 export const updatePolicy = createAsyncThunk(
   "policies/update",
   async ({ id, data }) => {
-    const res = await api.put(`${API_URL}/${id}`, data);
+    const res = await api.put(`${API_URL}/${id}`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return res.data;
   }
 );
