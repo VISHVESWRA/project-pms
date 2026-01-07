@@ -14,14 +14,22 @@ export default function PolicyForm() {
   const { register, handleSubmit, control, reset } = useForm();
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
+  const [filePreview, setFilePreview] = useState(null);
+  const [existingFile, setExistingFile] = useState(null);
+  const isPdf = filePreview?.endsWith(".pdf");
 
   useEffect(() => {
     if (id) {
       setLoading(true);
       api
-        .get(`https://project-pms-backend.onrender.com/api/policies/${id}`)
+        .get(`/policies/${id}`)
         .then((res) => {
           reset(res.data);
+
+          if (res.data.appliedDocument) {
+            setExistingFile(res.data.appliedDocument);
+          }
+
           setLoading(false);
         })
         .catch(() => setLoading(false));
@@ -36,15 +44,20 @@ export default function PolicyForm() {
 
   if (loading) return <p>Loading...</p>;
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const getFileUrl = (path) => {
+    if (!path) return null;
+    console.log("path", path);
 
+    return `https://project-pms-backend.onrender.com/${encodeURI(path)}`;
+  };
+
+  const onSubmit = (data) => {
     const formData = new FormData();
 
     Object.keys(data).forEach((key) => {
       if (key === "appliedDocument") {
         if (data.appliedDocument?.[0]) {
-          formData.append("appliedDocument", data.appliedDocument[0]);
+          formData.append("document", data.appliedDocument[0]);
         }
       } else {
         formData.append(key, data[key]);
@@ -54,8 +67,6 @@ export default function PolicyForm() {
     if (id) {
       dispatch(updatePolicy({ id, data: formData }));
     } else {
-      console.log("add", formData);
-
       dispatch(addPolicy(formData));
     }
 
@@ -242,16 +253,65 @@ export default function PolicyForm() {
 
             <input
               type="file"
-              accept=".pdf,.jpg,.png"
+              accept="application/pdf,image/*"
               {...register("appliedDocument")}
-              onChange={(e) => setFile(e.target.files[0])}
-              className="block w-full text-sm text-gray-500
-      file:mr-4 file:py-2 file:px-4
-      file:rounded-md file:border-0
-      file:text-sm file:font-semibold
-      file:bg-blue-50 file:text-blue-700
-      hover:file:bg-blue-100"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  setFilePreview(URL.createObjectURL(file));
+                  setExistingFile(null);
+                }
+              }}
             />
+
+            <pre>{filePreview}</pre>
+            <pre>{existingFile}</pre>
+            <pre>{isPdf}</pre>
+            {/* FILE PREVIEW */}
+            {filePreview && (
+              <div className="mt-3">
+                {filePreview.includes("pdf") ? (
+                  <iframe src={filePreview} className="w-full h-64 border" />
+                ) : (
+                  <img src={filePreview} className="max-h-64 border" />
+                )}
+              </div>
+            )}
+
+            <iframe
+              src={existingFile}
+              width="100%"
+              height="400px"
+              style={{ border: "1px solid #ccc" }}
+              title="PDF Preview"
+            />
+
+            {isPdf ? (
+              <iframe
+                src={existingFile}
+                width="100%"
+                height="400px"
+                style={{ border: "1px solid #ccc" }}
+                title="PDF Preview"
+              />
+            ) : (
+              <img
+                src={existingFile}
+                alt="Preview"
+                className="w-full max-h-[500px] object-contain"
+              />
+            )}
+
+            {existingFile && (
+              <a
+                href={existingFile}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline"
+              >
+                Preview / Download Document
+              </a>
+            )}
             {id && (
               <p className="text-xs text-gray-500 mt-1">
                 Uploading a new file will replace the existing document

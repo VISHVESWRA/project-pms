@@ -8,17 +8,15 @@ export const fetchPolicies = createAsyncThunk("policies/fetch", async () => {
   return res.data;
 });
 
-export const addPolicy = createAsyncThunk("policies/add", async (policy) => {
-  console.log("add api", policy);
-
-  const res = await api.post(API_URL, policy);
+export const addPolicy = createAsyncThunk("policies/add", async (formData) => {
+  const res = await api.post("/policies", formData);
   return res.data;
 });
 
 export const updatePolicy = createAsyncThunk(
   "policies/update",
   async ({ id, data }) => {
-    const res = await api.put(`${API_URL}/${id}`, data, {
+    const res = await api.put(`/policies/${id}`, data, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
