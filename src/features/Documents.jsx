@@ -1,7 +1,7 @@
 // src/Documents.js
 import React, { useState, useEffect } from "react";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://project-pms-backend.onrender.com/api";
 
 function Documents() {
   const [documents, setDocuments] = useState([]);
@@ -236,7 +236,7 @@ function Documents() {
   };
 
   return (
-    <div className="min-h-screen bg-amber-50">
+    <div className="min-h-screen">
       {/* Header */}
       <header className="bg-amber-50 px-6 py-3 border-b border-gray-200">
         <div className="flex justify-between items-center">
@@ -286,7 +286,7 @@ function Documents() {
         ))}
       </nav>
 
-      <div className="max-w-7xl mx-auto px-6 py-6">
+      <div className="max-w-7xl mx-auto">
         {/* Page Header */}
         <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
           <div>
