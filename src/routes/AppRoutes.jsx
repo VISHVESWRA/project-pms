@@ -28,6 +28,7 @@ import PolicyStatus from "../features/policies/PolicyStatus.jsx";
 import HRDashboard from "../layouts/Dashboard.jsx";
 import LoanStatus from "../features/loans/LoanStatus.jsx";
 import ChitStatus from "../features/chits/ChitStatus.jsx";
+import Documents from "../features/Documents.jsx";
 
 function AppRoutes() {
   return (
@@ -93,6 +94,7 @@ function AppRoutes() {
         <Route path="policiesStatus" element={<PolicyStatus />} />
         <Route path="loanStatus" element={<LoanStatus />} />
         <Route path="chitStatus" element={<ChitStatus />} />
+        <Route path="documents" element={<Documents />} />
       </Route>
     </Routes>
   );

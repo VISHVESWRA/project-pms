@@ -15,6 +15,7 @@ export default function HRDashboard() {
     { name: "Policies", path: "/hrDashboard/policiesStatus" },
     { name: "Loans", path: "/hrDashboard/loanStatus" },
     { name: "Chits", path: "/hrDashboard/chitStatus" },
+    { name: "Documents", path: "/hrDashboard/documents" },
     { name: "Misc", path: "/misc" },
     { name: "Setting", path: "/home" },
   ];
