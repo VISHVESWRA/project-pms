@@ -37,7 +37,9 @@ function Login() {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const res = await api.post("/auth/login", data);
+      const res = await api.post("/auth/login", data, {
+        headers: { "Content-Type": "application/json" },
+      });
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
