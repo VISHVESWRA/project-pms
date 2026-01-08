@@ -623,7 +623,7 @@ function Documents() {
                 <img
                   src={previewDoc.cloudinaryUrl}
                   alt={previewDoc.originalName}
-                  className="max-w-full max-h-[70vh] mx-auto rounded-lg"
+                  className="max-w-full max-h-[60vh] mx-auto rounded-lg"
                 />
               ) : previewDoc.fileType === "application/pdf" ? (
                 <>
