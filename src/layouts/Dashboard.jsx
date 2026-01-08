@@ -15,8 +15,8 @@ import { Outlet, useNavigate } from "react-router-dom";
 export default function HRDashboard() {
   const menuItems = [
     { name: "Dashboard", path: "/hrDashboard/home" },
-    { name: "Income", path: "/dashboard/income" },
-    { name: "Expenses", path: "/dashboard/expenses" },
+    { name: "Income", path: "/dashboard/income/list" },
+    { name: "Expenses", path: "/dashboard/expenses/list" },
     { name: "Policies", path: "/hrDashboard/policiesStatus" },
     { name: "Loans", path: "/hrDashboard/loanStatus" },
     { name: "Chits", path: "/hrDashboard/chitStatus" },
@@ -43,22 +43,22 @@ export default function HRDashboard() {
   // Theme configurations
   const themes = {
     yellow: {
-      bg: "from-yellow-50 via-white to-yellow-100",
+      bg: "from-yellow-100 via-white to-yellow-200",
       active: "bg-gray-800 text-white",
       hover: "hover:bg-gray-100",
     },
     blue: {
-      bg: "from-blue-50 via-white to-blue-100",
+      bg: "from-blue-100 via-white to-blue-200",
       active: "bg-blue-600 text-white",
       hover: "hover:bg-blue-50",
     },
     purple: {
-      bg: "from-purple-50 via-white to-purple-100",
+      bg: "from-purple-100 via-white to-purple-200",
       active: "bg-purple-600 text-white",
       hover: "hover:bg-purple-50",
     },
     green: {
-      bg: "from-green-50 via-white to-green-100",
+      bg: "from-green-100 via-white to-green-200",
       active: "bg-green-600 text-white",
       hover: "hover:bg-green-50",
     },

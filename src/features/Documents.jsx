@@ -1,8 +1,7 @@
 // src/Documents.js
 import React, { useState, useEffect } from "react";
 import { Md10K, MdDeleteForever } from "react-icons/md";
-
-const API_URL = "https://project-pms-backend.onrender.com/api";
+import api from "../app/axios";
 
 function Documents() {
   const [documents, setDocuments] = useState([]);
@@ -39,15 +38,14 @@ function Documents() {
   const fetchDocuments = async () => {
     setLoading(true);
     try {
-      let url = `${API_URL}/documents`;
-      const params = new URLSearchParams();
-      if (filterType !== "all") params.append("documentType", filterType);
-      if (searchTerm) params.append("search", searchTerm);
-      if (params.toString()) url += `?${params.toString()}`;
+      const response = await api.get("/documents", {
+        params: {
+          ...(filterType !== "all" && { documentType: filterType }),
+          ...(searchTerm && { search: searchTerm }),
+        },
+      });
 
-      const response = await fetch(url);
-      const result = await response.json();
-      setDocuments(result.data || []);
+      setDocuments(response.data.data || []);
     } catch (error) {
       console.error("Error fetching documents:", error);
       alert("Failed to fetch documents");
@@ -58,9 +56,8 @@ function Documents() {
 
   const fetchStatistics = async () => {
     try {
-      const response = await fetch(`${API_URL}/documents/statistics`);
-      const result = await response.json();
-      setStatistics(result.data);
+      const response = await api.get("/documents/statistics");
+      setStatistics(response.data.data);
     } catch (error) {
       console.error("Error fetching statistics:", error);
     }
@@ -98,9 +95,10 @@ function Documents() {
 
     setUploading(true);
     try {
-      const response = await fetch(`${API_URL}/documents/upload`, {
-        method: "POST",
-        body: uploadFormData,
+      const response = await api.post("/documents/upload", uploadFormData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       const result = await response.json();
@@ -133,9 +131,7 @@ function Documents() {
       return;
 
     try {
-      const response = await fetch(`${API_URL}/documents/${id}`, {
-        method: "DELETE",
-      });
+      const response = await api.delete(`/documents/${id}`);
 
       if (response.ok) {
         alert("✅ Document deleted successfully");

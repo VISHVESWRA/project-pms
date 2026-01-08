@@ -31,16 +31,19 @@ export default function ExpenseForm() {
 
   // If editing, fetch the expense data
   useEffect(() => {
-    if (id) {
+    if (!id) return;
+
+    const fetchExpense = async () => {
       setLoading(true);
-      api
-        .get(`https://project-pms-backend.onrender.com/api/expenses/${id}`)
-        .then((res) => {
-          reset(res.data);
-          setLoading(false);
-        })
-        .catch(() => setLoading(false));
-    }
+      try {
+        const res = await api.get(`/expenses/${id}`);
+        reset(res.data);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchExpense();
   }, [id, reset]);
 
   const onSubmit = (data) => {

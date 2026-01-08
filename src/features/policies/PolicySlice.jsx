@@ -1,38 +1,69 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../app/axios";
 
-const API_URL = "https://project-pms-backend.onrender.com/api/policies";
-
-export const fetchPolicies = createAsyncThunk("policies/fetch", async () => {
-  const res = await api.get(API_URL);
-  return res.data;
-});
-
-export const addPolicy = createAsyncThunk("policies/add", async (formData) => {
-  const res = await api.post("/policies", formData);
-  return res.data;
-});
-
-export const updatePolicy = createAsyncThunk(
-  "policies/update",
-  async ({ id, data }) => {
-    const res = await api.put(`/policies/${id}`, data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return res.data;
+// Fetch all policies
+export const fetchPolicies = createAsyncThunk(
+  "policies/fetch",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await api.get("/policies");
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Failed to fetch policies");
+    }
   }
 );
 
-export const deletePolicy = createAsyncThunk("policies/delete", async (id) => {
-  await api.delete(`${API_URL}/${id}`);
-  return id;
-});
+// Add policy
+export const addPolicy = createAsyncThunk(
+  "policies/add",
+  async (formData, { rejectWithValue }) => {
+    try {
+      const res = await api.post("/policies", formData);
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Failed to add policy");
+    }
+  }
+);
+
+// Update policy
+export const updatePolicy = createAsyncThunk(
+  "policies/update",
+  async ({ id, data }, { rejectWithValue }) => {
+    try {
+      const res = await api.put(`/policies/${id}`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Failed to update policy");
+    }
+  }
+);
+
+// Delete policy
+export const deletePolicy = createAsyncThunk(
+  "policies/delete",
+  async (id, { rejectWithValue }) => {
+    try {
+      await api.delete(`/policies/${id}`);
+      return id;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Failed to delete policy");
+    }
+  }
+);
 
 const policySlice = createSlice({
   name: "policies",
-  initialState: { items: [], loading: false, error: null },
+  initialState: {
+    items: [],
+    loading: false,
+    error: null,
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchPolicies.pending, (state) => {
@@ -41,6 +72,10 @@ const policySlice = createSlice({
       .addCase(fetchPolicies.fulfilled, (state, action) => {
         state.items = action.payload;
         state.loading = false;
+      })
+      .addCase(fetchPolicies.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
       .addCase(addPolicy.fulfilled, (state, action) => {
         state.items.unshift(action.payload);

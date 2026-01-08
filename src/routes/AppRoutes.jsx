@@ -88,7 +88,14 @@ function AppRoutes() {
         <Route path="chits/form/:id" element={<ChitForm />} />
         <Route path="chits/list" element={<ChitList />} />
       </Route>
-      <Route path="/hrDashboard" element={<HRDashboard />}>
+      <Route
+        path="/hrDashboard"
+        element={
+          <ProtectedRoute>
+            <HRDashboard />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<Home />} />
         <Route path="home" element={<Home />} />
         <Route path="policiesStatus" element={<PolicyStatus />} />

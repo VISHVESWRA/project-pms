@@ -5,6 +5,7 @@ const ProtectedRoute = ({ children }) => {
   const location = useLocation();
 
   if (!isAuthenticated()) {
+    localStorage.removeItem("token"); // cleanup
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
