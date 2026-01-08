@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {
-  Users,
+  User,
   Briefcase,
   FolderOpen,
-  User,
   LogOut,
   Settings,
   Bell,
@@ -13,12 +12,7 @@ import {
 } from "lucide-react";
 import { Outlet, useNavigate } from "react-router-dom";
 
-// import React, { useEffect, useState } from "react";
-// import { Users, Briefcase, FolderOpen, User, LogOut, Settings, Bell, Moon, Globe, Lock } from "lucide-react";
-
 export default function HRDashboard() {
-  const navigate = useNavigate();
-
   const menuItems = [
     { name: "Dashboard", path: "/hrDashboard/home" },
     { name: "Income", path: "/dashboard/income" },
@@ -43,13 +37,39 @@ export default function HRDashboard() {
   const [profileModalOpen, setProfileModalOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [theme, setTheme] = useState("yellow"); // yellow, blue, purple, green
+  const navigate = useNavigate();
+
+  // Theme configurations
+  const themes = {
+    yellow: {
+      bg: "from-yellow-50 via-white to-yellow-100",
+      active: "bg-gray-800 text-white",
+      hover: "hover:bg-gray-100",
+    },
+    blue: {
+      bg: "from-blue-50 via-white to-blue-100",
+      active: "bg-blue-600 text-white",
+      hover: "hover:bg-blue-50",
+    },
+    purple: {
+      bg: "from-purple-50 via-white to-purple-100",
+      active: "bg-purple-600 text-white",
+      hover: "hover:bg-purple-50",
+    },
+    green: {
+      bg: "from-green-50 via-white to-green-100",
+      active: "bg-green-600 text-white",
+      hover: "hover:bg-green-50",
+    },
+  };
+
+  const currentTheme = themes[theme];
 
   const handleNavigation = (path, menuId) => {
     setActiveMenu(menuId);
     setMenuOpen(false);
     navigate(path);
-
-    // In your actual app with react-router, use: navigate(path);
   };
 
   const handleLogout = () => {
@@ -67,7 +87,9 @@ export default function HRDashboard() {
 
   return (
     <>
-      <div className="min-h-screen bg-linear-to-br from-yellow-50 via-white to-yellow-100 rounded-3xl shadow-2xl p-4 sm:p-6 lg:p-8">
+      <div
+        className={`min-h-screen bg-gradient-to-br ${currentTheme.bg} rounded-3xl shadow-2xl p-4 sm:p-6 lg:p-8`}
+      >
         {/* Header */}
         <header className="mb-6 sm:mb-8 flex-shrink-0">
           <div className="flex items-center justify-between">
@@ -85,8 +107,8 @@ export default function HRDashboard() {
                   }
                   className={`px-4 py-2 rounded-full text-sm font-medium transition ${
                     activeMenu === item.name.toLowerCase()
-                      ? "bg-gray-800 text-white"
-                      : "text-gray-700 hover:bg-gray-100"
+                      ? currentTheme.active
+                      : `text-gray-700 ${currentTheme.hover}`
                   }`}
                 >
                   {item.name}
@@ -150,8 +172,8 @@ export default function HRDashboard() {
                   }
                   className={`px-4 py-2 rounded-full text-sm font-medium transition ${
                     activeMenu === item.name.toLowerCase()
-                      ? "bg-gray-800 text-white"
-                      : "text-gray-700 hover:bg-gray-100"
+                      ? currentTheme.active
+                      : `text-gray-700 ${currentTheme.hover}`
                   }`}
                 >
                   {item.name}
@@ -170,7 +192,6 @@ export default function HRDashboard() {
 
           {/* Outlet Content Area */}
           <div className="mt-6">
-            {/* Your Outlet component will render here in the actual app */}
             <Outlet />
           </div>
         </div>
@@ -189,16 +210,46 @@ export default function HRDashboard() {
               <h3 className="font-semibold text-gray-800">Settings</h3>
             </div>
 
-            <button
-              onClick={() => {
-                console.log("Theme settings");
-                setSettingsOpen(false);
-              }}
-              className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-left"
-            >
+            <div className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition text-left">
               <Moon className="w-5 h-5 text-gray-600" />
-              <span className="text-gray-800">Appearance</span>
-            </button>
+              <div className="flex-1">
+                <span className="text-gray-800">Theme</span>
+                <div className="flex gap-2 mt-2">
+                  <button
+                    onClick={() => setTheme("yellow")}
+                    className={`w-6 h-6 rounded-full bg-gradient-to-br from-yellow-400 to-yellow-500 cursor-pointer ${
+                      theme === "yellow"
+                        ? "ring-2 ring-gray-800 ring-offset-2"
+                        : ""
+                    }`}
+                  />
+                  <button
+                    onClick={() => setTheme("blue")}
+                    className={`w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-blue-500 cursor-pointer ${
+                      theme === "blue"
+                        ? "ring-2 ring-gray-800 ring-offset-2"
+                        : ""
+                    }`}
+                  />
+                  <button
+                    onClick={() => setTheme("purple")}
+                    className={`w-6 h-6 rounded-full bg-gradient-to-br from-purple-400 to-purple-500 cursor-pointer ${
+                      theme === "purple"
+                        ? "ring-2 ring-gray-800 ring-offset-2"
+                        : ""
+                    }`}
+                  />
+                  <button
+                    onClick={() => setTheme("green")}
+                    className={`w-6 h-6 rounded-full bg-gradient-to-br from-green-400 to-green-500 cursor-pointer ${
+                      theme === "green"
+                        ? "ring-2 ring-gray-800 ring-offset-2"
+                        : ""
+                    }`}
+                  />
+                </div>
+              </div>
+            </div>
 
             <button
               onClick={() => {
