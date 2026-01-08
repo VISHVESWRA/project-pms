@@ -10,8 +10,8 @@ export default function HRDashboard() {
 
   const menuItems = [
     { name: "Dashboard", path: "/hrDashboard/home" },
-    { name: "Income", path: "/income" },
-    { name: "Expenses", path: "/expenses" },
+    { name: "Income", path: "/dashboard/income" },
+    { name: "Expenses", path: "/dashboard/expenses" },
     { name: "Policies", path: "/hrDashboard/policiesStatus" },
     { name: "Loans", path: "/hrDashboard/loanStatus" },
     { name: "Chits", path: "/hrDashboard/chitStatus" },

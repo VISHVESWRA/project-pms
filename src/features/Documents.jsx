@@ -1,5 +1,6 @@
 // src/Documents.js
 import React, { useState, useEffect } from "react";
+import { Md10K, MdDeleteForever } from "react-icons/md";
 
 const API_URL = "https://project-pms-backend.onrender.com/api";
 
@@ -237,55 +238,6 @@ function Documents() {
 
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <header className="bg-amber-50 px-6 py-3 border-b border-gray-200">
-        <div className="flex justify-between items-center">
-          <div className="border-2 border-gray-900 rounded-full px-5 py-1.5 text-lg font-bold">
-            PMS
-          </div>
-          <div className="flex gap-4 items-center">
-            <button className="text-lg text-gray-600 hover:text-gray-900">
-              ☰
-            </button>
-            <button className="text-lg text-gray-600 hover:text-gray-900">
-              ⚙️
-            </button>
-            <button className="text-lg text-gray-600 hover:text-gray-900">
-              🔔
-            </button>
-            <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">
-              V
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Navigation */}
-      <nav className="bg-amber-50 px-6 py-3 flex gap-3 flex-wrap">
-        {[
-          "Dashboard",
-          "Income",
-          "Expenses",
-          "Policies",
-          "Loans",
-          "Chits",
-          "Misc",
-          "Documents",
-          "Setting",
-        ].map((item) => (
-          <button
-            key={item}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-              item === "Documents"
-                ? "bg-gray-900 text-white"
-                : "bg-transparent text-gray-600 hover:bg-gray-100"
-            }`}
-          >
-            {item}
-          </button>
-        ))}
-      </nav>
-
       <div className="max-w-7xl mx-auto">
         {/* Page Header */}
         <div className="flex justify-between items-center mb-6 flex-wrap gap-4">
@@ -541,7 +493,7 @@ function Documents() {
                   onClick={() => handleDeleteDocument(doc._id)}
                   className="absolute top-2 right-2 w-7 h-7 rounded-full bg-red-500 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 flex items-center justify-center text-sm"
                 >
-                  ✕
+                  <MdDeleteForever size={18} />
                 </button>
 
                 <div
