@@ -140,7 +140,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           {/* LOANS */}
 
           <NavLink
-            to="/dashboard/loan/list"
+            to="/dashboard/loans/list"
             className={linkClass}
             onClick={() => setSidebarOpen(false)}
           >

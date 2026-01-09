@@ -53,12 +53,12 @@ export default function HRDashboard() {
       hover: "hover:bg-blue-50",
     },
     purple: {
-      bg: "from-purple-100 via-white to-purple-200",
+      bg: "from-purple-200 via-white to-purple-300",
       active: "bg-purple-600 text-white",
       hover: "hover:bg-purple-50",
     },
     green: {
-      bg: "from-green-100 via-white to-green-200",
+      bg: "from-green-200 via-white to-green-300",
       active: "bg-green-600 text-white",
       hover: "hover:bg-green-50",
     },
@@ -88,7 +88,7 @@ export default function HRDashboard() {
   return (
     <>
       <div
-        className={`min-h-screen bg-gradient-to-br ${currentTheme.bg} rounded-3xl shadow-2xl p-4 sm:p-6 lg:p-8`}
+        className={`min-h-screen bg-linear-to-br ${currentTheme.bg} rounded-3xl shadow-2xl p-4 sm:p-6 lg:p-8`}
       >
         {/* Header */}
         <header className="mb-6 sm:mb-8 flex-shrink-0">
