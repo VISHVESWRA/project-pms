@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://project-pms-backend.onrender.com/api",
+  baseURL: "https://project-pms-dbserver.onrender.com/api",
 });
 
 // REQUEST INTERCEPTOR
