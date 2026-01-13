@@ -12,6 +12,7 @@ import {
   ChevronRight,
   X,
 } from "lucide-react";
+import { Nav } from "react-bootstrap";
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const location = useLocation();
@@ -78,7 +79,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           >
             <LayoutDashboard size={18} /> Dashboard
           </NavLink>
-          <NavLink
+          {/* <NavLink
             to="/hrDashboard"
             end
             className={linkClass}
@@ -86,7 +87,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           >
             <LayoutDashboard size={18} /> New Dashboard
           </NavLink>
-          {/* <NavLink
+          <NavLink
             to="/coDashboard"
             end
             className={linkClass}
@@ -94,6 +95,15 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           >
             <LayoutDashboard size={18} /> Co Dashboard
           </NavLink> */}
+
+          <NavLink
+            to="/pmsDashboard"
+            end
+            className={linkClass}
+            onClick={() => setSidebarOpen(false)}
+          >
+            <LayoutDashboard size={18} /> PMS
+          </NavLink>
 
           <NavLink
             to="/dashboard/income/list"

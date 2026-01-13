@@ -25,6 +25,7 @@ import ChitStatus from "../features/chits/ChitStatus.jsx";
 import Documents from "../features/Documents.jsx";
 import CoDashboard from "../layouts/CopioletDashboard.jsx";
 import PMSDashboard from "../layouts/CopioletDashboard.jsx";
+import PMSLayout from "../layouts/PMSLayout.jsx";
 
 function AppRoutes() {
   return (
@@ -100,6 +101,24 @@ function AppRoutes() {
         <Route path="documents" element={<Documents />} />
       </Route>
       <Route path="/codashboard" element={<PMSDashboard />} />
+
+      <Route
+        path="/pmsDashboard"
+        element={
+          <ProtectedRoute>
+            <PMSLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<Home />} />
+        <Route path="home" element={<Home />} />
+        <Route path="income/list" element={<IncomeList />} />
+        <Route path="expenses/list" element={<ExpensesList />} />
+        <Route path="policiesStatus" element={<PolicyStatus />} />
+        <Route path="loanStatus" element={<LoanStatus />} />
+        <Route path="chitStatus" element={<ChitStatus />} />
+        <Route path="documents" element={<Documents />} />
+      </Route>
     </Routes>
   );
 }
