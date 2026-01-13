@@ -60,10 +60,10 @@ export default function PolicyCard({ policy }) {
       </p>
 
       {/* Actions */}
-      <div className="flex justify-end gap-4 mt-4 text-sm">
+      {/* <div className="flex justify-end gap-4 mt-4 text-sm">
         <button className="text-blue-600 hover:underline">View</button>
         <button className="text-gray-600 hover:underline">Edit</button>
-      </div>
+      </div> */}
     </div>
   );
 }

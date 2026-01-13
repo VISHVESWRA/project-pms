@@ -3,15 +3,9 @@ import Login from "../features/auth/pages/Login.jsx";
 import Register from "../features/auth/pages/Register.jsx";
 import ForgotPassword from "../features/auth/pages/ForgotPassword.jsx";
 import ResetPassword from "../features/auth/pages/ResetPassword.jsx";
-import Loans from "../features/sidebar/list/loans/Loans.jsx";
-import Policies from "../features/sidebar/list/Policies.jsx";
-import Chit from "../features/sidebar/list/chit/Chit.jsx";
 import Home from "../features/sidebar/list/Home.jsx";
 import AuthLayout from "../layouts/AuthLayouts.jsx";
 import DashboardLayout from "../layouts/DashboardLayouts.jsx";
-import ChitAct from "../features/sidebar/list/chit/ChitAct.jsx";
-import ChitServices from "../features/sidebar/list/chit/ChitServices.jsx";
-import PersonalLoan from "../features/sidebar/list/loans/PersonalLoan.jsx";
 import IncomeForm from "../features/income/IncomeForm.jsx";
 import IncomeList from "../features/income/IncomeList.jsx";
 import ExpensesList from "../features/expenses/ExpensesList.jsx";
@@ -29,6 +23,8 @@ import HRDashboard from "../layouts/Dashboard.jsx";
 import LoanStatus from "../features/loans/LoanStatus.jsx";
 import ChitStatus from "../features/chits/ChitStatus.jsx";
 import Documents from "../features/Documents.jsx";
+import CoDashboard from "../layouts/CopioletDashboard.jsx";
+import PMSDashboard from "../layouts/CopioletDashboard.jsx";
 
 function AppRoutes() {
   return (
@@ -59,13 +55,13 @@ function AppRoutes() {
         <Route path="*" element={<Navigate to="/" replace />} />
         <Route index element={<Home />} />
         {/* <Route index element={<Navigate to="home" replace />} /> */}
-        <Route path="home" element={<Home />} />
-        <Route path="loans" element={<Loans />} />
-        <Route path="policies" element={<Policies />} />
-        <Route path="chit" element={<Chit />} />
-        <Route path="chit-act" element={<ChitAct />} />
-        <Route path="chit-services" element={<ChitServices />} />
-        <Route path="personal-loan" element={<PersonalLoan />} />
+        {/* <Route path="home" element={<Home />} /> */}
+        {/* <Route path="loans" element={<Loans />} /> */}
+        {/* <Route path="policies" element={<Policies />} /> */}
+        {/* <Route path="chit" element={<Chit />} /> */}
+        {/* <Route path="chit-act" element={<ChitAct />} /> */}
+        {/* <Route path="chit-services" element={<ChitServices />} /> */}
+        {/* <Route path="personal-loan" element={<PersonalLoan />} /> */}
 
         <Route path="income/form" element={<IncomeForm />} />
         <Route path="income/form/:id" element={<IncomeForm />} />
@@ -103,6 +99,7 @@ function AppRoutes() {
         <Route path="chitStatus" element={<ChitStatus />} />
         <Route path="documents" element={<Documents />} />
       </Route>
+      <Route path="/codashboard" element={<PMSDashboard />} />
     </Routes>
   );
 }

@@ -86,6 +86,14 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           >
             <LayoutDashboard size={18} /> New Dashboard
           </NavLink>
+          {/* <NavLink
+            to="/coDashboard"
+            end
+            className={linkClass}
+            onClick={() => setSidebarOpen(false)}
+          >
+            <LayoutDashboard size={18} /> Co Dashboard
+          </NavLink> */}
 
           <NavLink
             to="/dashboard/income/list"
